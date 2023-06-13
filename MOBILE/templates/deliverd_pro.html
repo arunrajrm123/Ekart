@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delivered Products</title>
+</head>
+<body>
+    <h1>Delivered Products</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Order Date</th>
+                <th>Delivery Date</th>
+                <th>Action</th>
+                <th>Updation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in delivered_product %}
+            <tr>
+                <td>{{ order.product.name }}</td>
+                <td>{{ order.total_amount }}</td>
+                <td>{{ order.total_quantity }}</td>
+                <td>{{ order.order_date }}</td>
+                <td>{{ order.product.delivery_date }}</td>
+                <td>
+                    <form method="POST" action="{% url 'deli' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                        <button type="submit" id="Return" name="Return">Return</button>
+                    </form>
+                </td>
+                
+            </tr>
+            <tr>
+                {% if mes %}
+                <td colspan="7">Return status: Pending</td>
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No delivered products found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

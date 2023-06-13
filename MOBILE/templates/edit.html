@@ -1,0 +1,148 @@
+
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>edit</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+
+    <h1 class="text-center">Edit Product{{ prod.name }}</h1>
+    
+
+        <div class="container">
+
+            <div class="row justify-content-center mt-5">
+              <div class="col-md-6">
+                
+                <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %} 
+                  <div >
+                    
+                   
+                   
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ prod.name }} "placeholder="" required>
+                    
+                  </div>
+                  <div >
+                    <label for="price">price</label>
+                    <input type="text" class="form-control" id="price" name="price" value="{{ prod.price }}"placeholder="" required>
+                    
+                  </div>
+                  <div >
+                    <label for="quantity">Quantity</label>
+                    <input type="text" class="form-control" id="quantity" name="quantity" value="{{ prod.quantity }}"placeholder="" required>
+                    
+                  </div>
+                  <div>
+                   
+                    
+                    <label for="image">Image</label>
+                    <div class="card-img-top">
+                      <img src="{{ prod.image1.url }}" class="card-img" alt="Image 1" style="max-width: 200px; max-height: 200px;">
+                    </div>
+                    
+                    <input type="file" class="form-control" id="image1" name="image1" accept="image/*" >
+                  </div>
+                  <div>
+                    <label for="image">Image</label>
+                    <img src="{{ prod.image2.url }}" class="card-img" alt="Image 1" style="max-width: 200px; max-height: 200px;">
+                    <input type="file" class="form-control" id="image2" name="image2" accept="image/*" >
+                  </div>
+                  <div>
+                    <div>
+                      <label for="image3">Image</label>
+                      <div class="card-img-top">
+                        <img src="{{ prod.image3.url }}" class="card-img" alt="Image 1" style="max-width: 200px; max-height: 200px;">
+                      </div>
+                      <input type="file" class="form-control mt-3" id="image3" name="image3" accept="image/*">
+                      
+                    
+                    
+                  </div>
+                  
+                  <div>
+                    <label for="description">description</label>
+                    <input type="text" class="form-control" id="description" name="description" value="{{ prod.description }}"placeholder="" required>
+                    
+                  </div>
+                  <div>
+                  {% comment %} <label for="catogery">catogery</label> 
+                    <input type="text" class="form-control" id="catogery" name="catogery" value="{{ prod.catogery.name }}" placeholder="" required>  {% endcomment %} 
+                    <label for="category">Category</label>
+<select class="form-control" id="category" name="category" >
+  <option value="{{ prod.category.name }}">{{ prod.category.name }}</option>
+  <option value="flagship">Flagship</option>
+  <option value="midrange">Midrange</option>
+</select>
+
+
+
+<script>
+  var categoryInput = document.getElementById("categoryInput");
+  var categorySelect = document.getElementById("categorySelect");
+
+  // Event listener to toggle between input field and select option
+  categoryInput.addEventListener("focus", function() {
+    categoryInput.style.display = "none";
+    categorySelect.style.display = "block";
+    categorySelect.value = categoryInput.value;
+  });
+
+  // Event listener to toggle between select option and input field
+  categorySelect.addEventListener("change", function() {
+    categoryInput.style.display = "block";
+    categorySelect.style.display = "none";
+    categoryInput.value = categorySelect.options[categorySelect.selectedIndex].text;
+  });
+</script>
+
+                    
+                   
+                    
+                  </div>
+                  <div class="gap-2  justify-content-center align-items-center d-flex">
+                    <button type="submit" class="btn btn-primary my-2"> Update</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          
+    </form>
+    <script>
+    function previewImage(event) {
+      var input = event.target;
+      var reader = new FileReader();
+      reader.onload = function() {
+        var img = document.getElementById("existingImage3");
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }</script>
+    
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html> 
+
+
+
+
+
