@@ -42,5 +42,9 @@ urlpatterns = [
     path('deli/', views.delivered_products, name='deli'),
     path('v_deli/', views.view_delivered_products, name='v_deli'),
     path('v_retu/', views.view_returned_products, name='v_retu'),
-  
+    path('quantityupdate/', views.ajaxQuantity, name='quantityupdate'),
+    path('ret', views.returned_products, name='ret'),
+    path('wish/', views.wishlist, name='wish'),
+     path('w_add/', views.wish_add_cart, name='w_add'),
+    path('remove_from_wishlist/<int:item_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

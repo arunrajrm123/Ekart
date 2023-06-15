@@ -74,34 +74,27 @@
 
             <ul class="nav">
                 <li>
-                    <a href="{% url 'admin_home' %}">
-                        <i class="ti-panel"></i>
-                        <p>Dashboard</p>
-                    </a>
+                    <a href="{% url 'shop'%}">Shop</a>
                 </li>
-               
+
+                <li class="label1" data-label1="hot">
+                    <a href="{% url 'orders'%}">orders</a>
+                </li>
+
                 <li>
-                    <a href="{% url 'view_orders' %}">
-                        <i class="ti-panel"></i>
-                        <p>Order Details</p>
-                    </a>
+                    <a href="{% url 'deli'%}">delivered_products</a>
                 </li>
-               
-              
-               
+
+                
                 <li>
-                    <a href="{% url 'productview' %}">
-                        <i class="ti-pencil-alt2"></i>
-                        <p>Product Details</p>
-                    </a>
+                    <a href="{% url 'wish'%}">Wishlist</a>
+                </li>
+                
+
+                <li>
+                    <a href="{% url 'ret'%}">returned_products</a>
                 </li>
                 <li>
-                    <a href="{% url 'view_coupon' %}">
-                        <i class="ti-view-list-alt"></i>
-                        <p>Coupon Details</p>
-                    </a>
-                </li>
-               
                 
                 
 				 <li><a href="/admin_logout" class="btn btn-outline-success">Logout</a></li> 
@@ -179,19 +172,20 @@
                                     <tbody>
                                         {% for cat in cato %}
                                         <tr>
-                                            <td >{{ cat.id }}</td>
-                                            <td >{{ cat.name }}</td>
-                                            <td >{{ cat.descrition}}</td>
-                                            
-                                            <td>
-                                                <a href="/edit_cato/{{ cat.id }}" class="btn btn-warning">Edit</a>
-                                                <a href="/delete_cato/{{ cat.id }}" class="btn btn-primary">Delete</a>
-                                               
+                                          <td>{{ cat.id }}</td>
+                                          <td>{{ cat.name }}</td>
+                                          <td>{{ cat.descrition }}</td>
+                                          
+                                          <td>
+                                            <a href="/edit_cato/{{ cat.id }}" class="btn btn-warning">Edit</a>
+                                            <a href="/delete_cato/{{ cat.id }}" class="btn btn-primary">Delete</a>
+                                          </td>
                                         </tr>
                                         {% endfor %}
-                                        <div class="ms-3 d-flex justify-content-center align-items-center"><a href="{% url 'addcatogery' %}" class="btn btn-success">Add New Category</a></div>
-                                    </td>
-                                    </tbody>
+                                        <tr>
+                                          <td colspan="4" class="ms-3 d-flex justify-content-center align-items-center"><a href="{% url 'addcatogery' %}" class="btn btn-success">Add New Category</a></td>
+                                        </tr>
+                                      </tbody>
                                 </table>
  
                             </div>

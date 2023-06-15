@@ -68,33 +68,28 @@
             <ul class="nav">
                 
                
-                <li>
-                    <a href="{% url 'admin_home' %}">
-                        <i class="ti-panel"></i>
-                        <p>Dashboard</p>
-                    </a>
-                </li>
-               
-                <li>
-                    <a href="{% url 'viewcatogery' %}">
-                        <i class="ti-text"></i>
-                        <p>Category Details</p>
-                    </a>
-                </li>
-               
-                <li>
-                    <a href="{% url 'productview' %}">
-                        <i class="ti-pencil-alt2"></i>
-                        <p>Product Details</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'view_coupon' %}">
-                        <i class="ti-view-list-alt"></i>
-                        <p>Coupon Details</p>
-                    </a>
-                </li>
-               
+              <li>
+								<a href="{% url 'shop'%}">Shop</a>
+							</li>
+
+							<li class="label1" data-label1="hot">
+								<a href="{% url 'orders'%}">orders</a>
+							</li>
+
+							<li>
+								<a href="{% url 'deli'%}">delivered_products</a>
+							</li>
+
+							
+							<li>
+								<a href="{% url 'wish'%}">Wishlist</a>
+							</li>
+							
+
+							<li>
+								<a href="{% url 'ret'%}">returned_products</a>
+							</li>
+							<li>
                 
                 
 				 <li><a href="/admin_logout" class="btn btn-outline-success">Logout</a></li> 
@@ -170,6 +165,10 @@
                           <th style="width: 200px;">Order Date and Time</th>
                           <th style="width: 200px;">Total  Amount </th>
                           <th style="width: 200px;">Total Quantity</th>
+                          <th>email</th>
+                          <th>phone</th>
+                          <th>address</th>
+                          <th>payment method</th>
                           <th style="width: 200px;">Action</th>
                           
                         </tr>
@@ -177,11 +176,15 @@
                       <tbody>
                         {% for order in delivered_product %}
                           <tr>
-                            <td>{{ order.product.name }}</td>
+                 <td>{{ order.id }}</td>
+                <td>{{ order.user_id.name }}</td>
+                <td>{{ order.order_date }}</td>
                 <td>{{ order.total_amount }}</td>
                 <td>{{ order.total_quantity }}</td>
-                <td>{{ order.order_date }}</td>
-                <td>{{ order.product.delivery_date }}</td>
+                <td>{{ order.user_id.email }}</td>
+                <td>{{ order.user_id.phone_number }}</td>
+                <td>{{ order.address.address_line }},{{ order.address.state }}</td>
+                <td>{{ order.payment_method }}</td>
                 <td>{% if order.is_returned%}
                     need approval</td>
                     {%endif%}

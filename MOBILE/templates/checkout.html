@@ -468,11 +468,13 @@
                       <select id="coupon-code" name="coupon_code" class="form-control">
                         <option value="">Select Coupon</option>
                         {% for coupon in coup %}
+
                           <option value="{{ coupon.code }}">{{ coupon.code }}</option>
                         {% endfor %}
                       </select>
                     </div>
                     <div class="text-center">
+                        
                       <button type="submit" name="action" value="apply_coupon" class="btn btn-primary">Apply Coupon</button>
                     </div>
                     

@@ -68,32 +68,28 @@
             <ul class="nav">
                 
                
-                <li>
-                    <a href="{% url 'admin_home' %}">
-                        <i class="ti-panel"></i>
-                        <p>Dashboard</p>
-                    </a>
-                </li>
-               
-                <li>
-                    <a href="{% url 'viewcatogery' %}">
-                        <i class="ti-text"></i>
-                        <p>Category Details</p>
-                    </a>
-                </li>
-               
-                <li>
-                    <a href="{% url 'productview' %}">
-                        <i class="ti-pencil-alt2"></i>
-                        <p>Product Details</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'view_coupon' %}">
-                        <i class="ti-view-list-alt"></i>
-                        <p>Coupon Details</p>
-                    </a>
-                </li>
+              <li>
+								<a href="{% url 'shop'%}">Shop</a>
+							</li>
+
+							<li class="label1" data-label1="hot">
+								<a href="{% url 'orders'%}">orders</a>
+							</li>
+
+							<li>
+								<a href="{% url 'deli'%}">delivered_products</a>
+							</li>
+
+							
+							<li>
+								<a href="{% url 'wish'%}">Wishlist</a>
+							</li>
+							
+
+							<li>
+								<a href="{% url 'ret'%}">returned_products</a>
+							</li>
+							<li>
                
                 
                 
@@ -177,34 +173,37 @@
                       </thead>
                       <tbody>
                         {% for order in orders %}
-                          <tr>
-                            <td style="width: 200px;">{{ order.id }}</td>
-                            <td style="width: 200px;">{{ order.user_id.name }}</td>
-                            <td style="width: 200px;">{{ order.order_date }}</td>
-                            <td style="width: 200px;">{{ order.total_amount }}</td>
-                            <td style="width: 200px;">{{ order.total_quantity }}</td>
-                            <td style="width: 200px;">{{ order.status }}</td>
-                            <td style="width: 200px;">{{ order.product.name }}</td>
-                            <td style="width: 200px;">{{ order.payment_method }}</td>
-                            <td>
-                              {% if not order.is_cancelled %}
-                                {% if order.status != "Delivered" %}
-                                  <form method="POST" action="{% url 'change_order_status' order_id=order.id %}">
-                                    {% csrf_token %}
-                                    <select name="status">
-                                      {% for choice in order.STATUS %}
-                                        <option value="{{ choice.0 }}" {% if choice.0 == order.status %}selected{% endif %}>{{ choice.1 }}</option>
-                                      {% endfor %}
-                                    </select>
-                                    <button type="submit">Change Status</button>
-                                  </form>
-                                {% endif %}
-                              {% else %}
-                                Order is Cancelled
-                              {% endif %}
-                            </td>
-                          </tr>
-                        {% endfor %}
+  <tr>
+    <td style="width: 200px;">{{ order.id }}</td>
+    <td style="width: 200px;">{{ order.user_id.name }}</td>
+    <td style="width: 200px;">{{ order.order_date }}</td>
+    <td style="width: 200px;">{{ order.total_amount }}</td>
+    <td style="width: 200px;">{{ order.total_quantity }}</td>
+    <td style="width: 200px;">{{ order.status }}</td>
+    <td style="width: 200px;">{{ order.product.name }}</td>
+    <td style="width: 200px;">{{ order.payment_method }}</td>
+    <td>
+      {% if not order.is_cancelled %}
+        {% if order.status != "Delivered" %}
+          {% if order.status != "Returned" %}
+            <form method="POST" action="{% url 'change_order_status' order_id=order.id %}">
+              {% csrf_token %}
+              <select name="status">
+                {% for choice in order.STATUS %}
+                  <option value="{{ choice.0 }}" {% if choice.0 == order.status %}selected{% endif %}>{{ choice.1 }}</option>
+                {% endfor %}
+              </select>
+              <button type="submit">Change Status</button>
+            </form>
+          {% endif %}
+        {% endif %}
+      {% else %}
+        Order is Cancelled
+      {% endif %}
+    </td>
+  </tr>
+{% endfor %}
+
                       </tbody>
                     </table>
                     {% else %}

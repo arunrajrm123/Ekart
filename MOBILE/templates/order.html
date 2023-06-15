@@ -1,381 +1,350 @@
-{% comment %} {% comment %} <!DOCTYPE html>
-<html>
-<head>
-  <title>Orders</title>
-  <style>
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    
-    th, td {
-      border: 1px solid black;
-      padding: 8px;
-      text-align: center;
-    }
-    
-    th {
-      background-color: lightgray;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  
-  {% if orders %}
-  <table>
-    <thead>
-      <tr>
-        <th>Order ID</th>
-        <th>Order Date</th>
-         <th>Price</th>
-        <th>Quantity</th> 
-        <th>Total Amount</th>
-        <th>Status</th>
-       
-      </tr>
-    </thead>
-    <tbody>
-      {% for order in orders %}
-      <tr>
-        
-        <td>{{ order.id }}</td>
-        <td>{{ order.order_date }}</td>
-         <td>$23000</td>
-         {% for cart_item in order.cart_items.all %}
-        <td>
-          {{ cart_item.product_id.name }}
-        </td>{% endfor %}
-        <td>${{ order.total_amount }}</td>
-        <td>{{ order.status }}</td>
-        <td>
-          {% if not order.is_cancelled %}
-          <form method="POST" action="{% url 'cancel_order' %}">
-            {% csrf_token %}
-            <input type="hidden" name="order_id" value="{{ order.id }}">
-            <button type="submit">Cancel Order</button>
-          </form>
-          {% else %}
-          <p>Order has been cancelled.</p>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <p>No orders found.</p>
-  {% endif %}
-</body>
-</html>  
+{% load static %} 
 
-
-
-
-
- {% endcomment %}
-{% comment %} <!DOCTYPE html>
-<html>
-<head>
-  <title>Cart</title>
-  <style>
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    
-    th, td {
-      border: 1px solid black;
-      padding: 8px;
-      text-align: center;
-    }
-    
-    th {
-      background-color: lightgray;
-      font-weight: bold;
-    }
-    
-    .subtotal {
-      font-weight: bold;
-    }
-    
-    .error-messages {
-      color: red;
-      margin-bottom: 10px;
-    }
-  </style>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $('.quantity-input').on('input', function() {
-        var quantity = $(this).val();
-        var price = parseFloat($(this).closest('tr').find('.price').text().replace('$', ''));
-        var subtotal = quantity * price;
-        $(this).closest('tr').find('.subtotal').text('$' + subtotal.toFixed(2));
-      });
-    });
-  
-    function clearCart() {
-      // Get the CSRF token
-      var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
-  
-      // Send an AJAX request to clear the cart
-      $.ajax({
-        url: '{% url 'clear_cart' %}',
-        type: 'POST',
-        data: {},
-        headers: {
-          'X-CSRFToken': csrfToken
-        },
-        success: function(response) {
-          // Reload the page to update the cart
-          location.reload();
-        },
-        error: function(xhr, status, error) {
-          console.error(error);
-        }
-      });
-    }
-  </script>
-</head>
-<body>
-  <h1>Your Cart</h1>
-  <button onclick="clearCart()">Clear Cart</button>
-  
-  <table>
-    <thead>
-      <tr>
-        <th>Image</th>
-        <th>Product Id</th>
-        <th>Price</th>
-        <th>Subtotal</th>
-        <th>Quantity</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for cart_item in cart_items %}
-      <tr id="{{ cart_item.cart_id }}">
-        <td>
-          <img src="{{ cart_item.product_id.image1.url }}" alt="{{ cart_item.product_id.name }}" style="width: 50px; height: auto;">
-        </td>
-        <td>{{ cart_item.product_id.product_id }}</td>
-        <td class="price">${{ cart_item.product_id.price }}</td>
-        <td class="subtotal">${{ cart_item.sub_total }}</td>
-        <td>
-          <form action="{% url 'add_to_cart' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="cart_id" value="{{ cart_item.cart_id }}">
-            <input type="hidden" name="name" value="{{ cart_item.product_id.name }}">
-            <input type="hidden" name="product_id" value="{{ cart_item.product_id.product_id }}">
-            <input type="number" class="quantity-input" name="quantity" value="{{ cart_item.quantity }}" min="1">
-            {% if error_messages %}
-              {% for error_message in error_messages %}
-                {% if error_message.product_name == cart_item.product_id.name %}
-                  <div class="error-messages">
-                    <p>{{ error_message.error_message }}</p>
-                  </div>
-                {% endif %}
-              {% endfor %}
-            {% endif %}
-            <button onclick="window.location.href='{% url 'checkout' %}'">Proceed to Checkout</button>
-           
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-  {% if error_messages %}
-    <div class="error-messages">
-      {% for error_message in error_messages %}
-        <p>{{ error_message.product_name }}: {{ error_message.error_message }}</p>
-      {% endfor %}
-    </div>
-  {% endif %}
-
-  {% if not cart_items %}
-    <p>Your cart is empty.</p>
-  {% endif %}
-  
- 
-</body>
-</html>  {% endcomment %}
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Zay Shop eCommerce HTML CSS Template</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-      
-     
-    <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/1659421847.eKart.jpg">
+	<title>Home</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+<link rel="icon" type="image/png" href="{% static 'assets/images/icons/favicon.png' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/fonts/iconic/css/material-design-iconic-font.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/fonts/linearicons-v1.0.0/icon-font.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/animate/animate.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/css-hamburgers/hamburgers.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/animsition/css/animsition.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/daterangepicker/daterangepicker.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/slick/slick.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/MagnificPopup/magnific-popup.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'assets/css/main.css' %}">
+<!--===============================================================================================-->
 
-    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/templatemo.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
+<style>
+  .table-container {
+    max-width: 800px; /* Adjust the width as per your design */
+    margin: 0 auto; /* Center the container horizontally */
+  }
 
-    <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-    <link rel="stylesheet" href="{% static 'assets/css/fontawesome.min.css' %}">
+  .table-container table {
+    /* Table styles */
+    width: 100%;
+    border-collapse: collapse;
+  }
 
-    <title>Orders</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background-color: #f2f2f2;
-      }
-      
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        background-color: white;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        border-radius: 5px;
-      }
-      
-      h1 {
-        margin-bottom: 20px;
-        color: #333;
-        text-align: center;
-      }
-      
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      
-      th, td {
-        border: 1px solid #ccc;
-        padding: 10px;
-        text-align: center;
-      }
-      
-      th {
-        background-color: #f7f7f7;
-        color: #333;
-        font-weight: bold;
-      }
-      
-      tr:nth-child(even) {
-        background-color: #f2f2f2;
-      }
-      
-      .no-orders {
-        text-align: center;
-        font-size: 18px;
-        color: #777;
-        margin-top: 30px;
-      }
-      
-      .product-image {
-        width: 50px;
-        height: auto;
-      }
-    </style>
-    
+  .table-container th, .table-container td {
+    /* Table header and cell styles */
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
 
+  .table-container th {
+    /* Table header styles */
+    background-color: #f2f2f2;
+  }
+
+  .table-container button {
+    /* Button styles */
+    padding: 6px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  .table-container button:hover {
+    background-color: #45a049;
+  }
+</style>
 </head>
+<body class="animsition">
+	
+	<!-- Header -->
+	<header>
+		<!-- Header desktop -->
+		<div class="container-menu-desktop">
+			<!-- Topbar -->
+			<div class="top-bar">
+				<div class="content-topbar flex-sb-m h-full container">
+					<div class="left-top-bar">
+						Free shipping for standard order over $100
+					</div>
 
-<body>
-    <!-- Start Top Nav -->
-    <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
-        <div class="container text-light">
-            <div class="w-100 d-flex justify-content-between">
-                <div>
-                    <i class="fa fa-envelope mx-2"></i>
-                    <a class="navbar-sm-brand text-light text-decoration-none" href="mailto:info@company.com">info@company.com</a>
-                    <i class="fa fa-phone mx-2"></i>
-                    <a class="navbar-sm-brand text-light text-decoration-none" href="tel:010-020-0340">010-020-0340</a>
-                </div>
-                <div>
-                    <a class="text-light" href="https://fb.com/templatemo" target="_blank" rel="sponsored"><i class="fab fa-facebook-f fa-sm fa-fw me-2"></i></a>
-                    <a class="text-light" href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram fa-sm fa-fw me-2"></i></a>
-                    <a class="text-light" href="https://twitter.com/" target="_blank"><i class="fab fa-twitter fa-sm fa-fw me-2"></i></a>
-                    <a class="text-light" href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin fa-sm fa-fw"></i></a>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <!-- Close Top Nav -->
+					<div class="right-top-bar flex-w h-full">
+						<a href="#" class="flex-c-m trans-04 p-lr-25">
+							Help & FAQs
+						</a>
 
+						<a href="#" class="flex-c-m trans-04 p-lr-25">
+							My Account
+						</a>
 
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-light shadow">
-        <div class="container d-flex justify-content-between align-items-center">
+						<a href="#" class="flex-c-m trans-04 p-lr-25">
+							EN
+						</a>
 
-            <a class="navbar-brand text-success logo h1 align-self-center" href="index.html">
-               Ecart
-            </a>
+						<a href="#" class="flex-c-m trans-04 p-lr-25">
+							USD
+						</a>
+					</div>
+				</div>
+			</div>
 
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+			<div class="wrap-menu-desktop">
+				<nav class="limiter-menu-desktop container">
+					
+					<!-- Logo desktop -->		
+					<a href="#" class="logo">
+						<img src="../static/assets/images/icons/logo-01.png" alt="IMG-LOGO">
+					</a>
 
-            <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
-                <div class="flex-fill">
-                    <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
-                       
+					<!-- Menu desktop -->
+					<div class="menu-desktop">
+						<ul class="main-menu">
+							<li class="active-menu">
+								<a href="index.html">Home</a>
+								<ul class="sub-menu">
+									<li><a href="index.html">Homepage 1</a></li>
+									<li><a href="home-02.html">Homepage 2</a></li>
+									<li><a href="home-03.html">Homepage 3</a></li>
+								</ul>
+							</li>
+
+							<li>
+								<a href="{% url 'shop'%}">Shop</a>
+							</li>
+
+							<li class="label1" data-label1="hot">
+								<a href="{% url 'orders'%}">orders</a>
+							</li>
+
+							<li>
+								<a href="{% url 'deli'%}">delivered_products</a>
+							</li>
+
+							
+							
+
+							<li>
+								<a href="">returned_products</a>
+							</li>
+							<li>
+								<a href="contact.html">Contact</a>
+							</li>
+						</ul>
                         <li class="nav-item">
-                          <a class="btn btn-outline-success" href="/user_logout" style="margin-left: 80px; font-weight: bold; font-size: 20px;" >Logout</a>
-                      </li>
-                    </ul>
-                </div>
-                <div class="navbar align-self-center d-flex">
-                    <div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="inputMobileSearch" placeholder="Search ...">
-                            <div class="input-group-text">
-                                <i class="fa fa-fw fa-search"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
-                        <i class="fa fa-fw fa-search text-dark mr-2"></i>
-                    </a>
-                    <a class="nav-icon position-relative text-decoration-none" href="">
-                        <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                        <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
-                    </a>
-                    <a class="nav-icon position-relative text-decoration-none" href="#">
-                        <i class="fa fa-fw fa-user text-dark mr-3"></i>
-                        <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span>
-                    </a>
-                </div>
-            </div>
+                            <a class="btn btn-outline-success" href="/user_logout" style="margin-left: 80px; font-weight: bold; font-size: 20px;" >Logout</a>
+                        </li> 
+					</div>	
 
-        </div>
-    </nav>
-    <!-- Close Header -->
+					<!-- Icon header -->
+					<div class="wrap-icon-header flex-w flex-r-m">
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+							<i class="zmdi zmdi-search"></i>
+						</div>
 
-    <!-- Modal -->
-    
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="2">
+							<i class="zmdi zmdi-shopping-cart"></i>
+						</div>
+
+						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+							<i class="zmdi zmdi-favorite-outline"></i>
+						</a>
+					</div>
+				</nav>
+			</div>	
+		</div>
+
+		<!-- Header Mobile -->
+		<div class="wrap-header-mobile">
+			<!-- Logo moblie -->		
+			<div class="logo-mobile">
+				<a href="index.html"><img src="../static/assets/images/icons/logo-01.png" alt="IMG-LOGO"></a>
+			</div>
+
+			<!-- Icon header -->
+			<div class="wrap-icon-header flex-w flex-r-m m-r-15">
+				<div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
+					<i class="zmdi zmdi-search"></i>
+				</div>
+
+				<div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="2">
+					<i class="zmdi zmdi-shopping-cart"></i>
+				</div>
+
+				<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
+					<i class="zmdi zmdi-favorite-outline"></i>
+				</a>
+			</div>
+
+			<!-- Button show menu -->
+			<div class="btn-show-menu-mobile hamburger hamburger--squeeze">
+				<span class="hamburger-box">
+					<span class="hamburger-inner"></span>
+				</span>
+			</div>
+		</div>
 
 
-    <!-- Start Banner Hero -->
-    
-    <div class="container">
-      <h1>Orders</h1>
+		<!-- Menu Mobile -->
+		<div class="menu-mobile">
+			<ul class="topbar-mobile">
+				<li>
+					<div class="left-top-bar">
+						Free shipping for standard order over $100
+					</div>
+				</li>
 
-    {% if orders %}
-    <table>
+				<li>
+					<div class="right-top-bar flex-w h-full">
+						<a href="#" class="flex-c-m p-lr-10 trans-04">
+							Help & FAQs
+						</a>
+
+						<a href="#" class="flex-c-m p-lr-10 trans-04">
+							My Account
+						</a>
+
+						<a href="#" class="flex-c-m p-lr-10 trans-04">
+							EN
+						</a>
+
+						<a href="#" class="flex-c-m p-lr-10 trans-04">
+							USD
+						</a>
+					</div>
+				</li>
+			</ul>
+
+			<ul class="main-menu-m">
+				<li>
+					<a href="index.html">Home</a>
+					<ul class="sub-menu-m">
+						<li><a href="index.html">Homepage 1</a></li>
+						<li><a href="home-02.html">Homepage 2</a></li>
+						<li><a href="home-03.html">Homepage 3</a></li>
+					</ul>
+					<span class="arrow-main-menu-m">
+						<i class="fa fa-angle-right" aria-hidden="true"></i>
+					</span>
+				</li>
+
+				<li>
+					<a href={% url 'shop' %}>Shop</a>
+				</li>
+
+				<li>
+					<a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Features</a>
+				</li>
+
+				<li>
+					<a href="blog.html">Blog</a>
+				</li>
+
+				<li>
+					<a href="about.html">About</a>
+				</li>
+
+				<li>
+					<a href="contact.html">Contact</a>
+				</li>
+			</ul>
+		</div>
+
+		<!-- Modal Search -->
+		<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+			<div class="container-search-header">
+				<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
+					<img src="images/icons/icon-close2.png" alt="CLOSE">
+				</button>
+
+				<form class="wrap-search-header flex-w p-l-15">
+					<button class="flex-c-m trans-04">
+						<i class="zmdi zmdi-search"></i>
+					</button>
+					<input class="plh3" type="text" name="search" placeholder="Search...">
+				</form>
+			</div>
+		</div>
+	</header>
+
+
+  
+	<!-- Cart -->
+	<div class="wrap-header-cart js-panel-cart">
+		<div class="s-full js-hide-cart"></div>
+
+		<div class="header-cart flex-col-l p-l-65 p-r-25">
+			<div class="header-cart-title flex-w flex-sb-m p-b-8">
+				<span class="mtext-103 cl2">
+					Your Cart
+				</span>
+
+				<div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
+					<i class="zmdi zmdi-close"></i>
+				</div>
+			</div>
+			
+			<div class="header-cart-content flex-w js-pscroll">
+				
+				
+				<div class="w-full">
+					
+					<div class="header-cart-buttons flex-w w-full">
+						<a href={% url 'add_to_cart' %} class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+							View Cart
+						</a>
+
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+		
+
+	<!-- Slider -->
+  <br>
+  <br>
+  <br>
+  <br>
+  <br><div class="table-container" style="padding-top: 20px; width: 100%; display: flex; justify-content: center;">
+    <table style="width: 100%;">
       <thead>
         <tr>
           <th>Order ID</th>
           <th>Order Date</th>
           <th>Product</th>
+          <th>image</th>
           <th>Quantity</th>
           <th>Total Amount</th>
+          <th>name</th>
+          <th>email</th>
+          <th>phone</th>
+          <th>address</th>
+          <th>payment method</th>
           <th>Status</th>
-          <th>cancel order</th>
-          <th>return</th>
+          <th>Cancel Order</th>
+         
         </tr>
       </thead>
       <tbody>
@@ -383,315 +352,463 @@
         <tr>
           <td>{{ order.id }}</td>
           <td>{{ order.order_date }}</td>
-          <td>
-            <img class="product-image" src="{{ order.product.image1.url }}" alt="{{ order.product.name }}">
-          </td>
-          
-          
-         
-          <td>{{ order.status }}</td>
-          <td>{{ order.total_amount }}</td>
+          <td>{{ order.product.name }}</td>
+          <td><div class="how-itemcart1" style="height: 50px; width: 50px;"><img src="{{ order.product.image1.url }}" alt="Product Image"></div></td>
           <td>{{ order.total_quantity }}</td>
+          <td>{{ order.total_amount }}</td>
           <td>{{ order.user_id.name}}</td>
-          <td>{{ order.status}}</td>
-
-           <td>
-            {% if order.status != 'Delivered' %}
-            <form method="POST" action="{% url 'cancel_order' %}">
-              {% csrf_token %}
-              <input type="hidden" name="order_id" value="{{ order.id }}">
-              <button type="submit">Cancel Order</button>
-            </form>
-            {% else %}
-            <p>Order cannot be cancelled.</p>
-            {% endif %}
-          </td> 
-         
-          
-          <td>{{ order.address.address_line}}</td>
-
-
-          
-
-          {% comment %} <td>
-            {% if order.status == 'Delivered' and not order.is_returned %}
-            <form method="POST" action="{% url 'return_order' %}">
-              {% csrf_token %}
-              <input type="hidden" name="order_id" value="{{ order.id }}">
-              <button type="submit">Return Order</button>
-            </form>
-            {% else %}
-            <p>Order cannot be returned.</p>
-            {% endif %}
-          </td> {% endcomment %}
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-    <p>No orders found.</p>
-    {% endif %}
-  </div>
-      
-    
-     
-      
-     
-   
-        
-    <!-- End Banner Hero -->
-
-   
-    <!-- Start Categories of The Month -->
-    
-    
-    <!-- End Categories of The Month -->
-
-
-    <!-- Start Featured Product -->
-   
-    <!-- End Featured Product -->
-
-
-    <!-- Start Footer -->
-    <footer class="bg-dark" id="tempaltemo_footer">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-md-4 pt-5">
-                    <h2 class="h2 text-success border-bottom pb-3 border-light logo">Zay Shop</h2>
-                    <ul class="list-unstyled text-light footer-link-list">
-                        <li>
-                            <i class="fas fa-map-marker-alt fa-fw"></i>
-                            123 Consectetur at ligula 10660
-                        </li>
-                        <li>
-                            <i class="fa fa-phone fa-fw"></i>
-                            <a class="text-decoration-none" href="tel:010-020-0340">010-020-0340</a>
-                        </li>
-                        <li>
-                            <i class="fa fa-envelope fa-fw"></i>
-                            <a class="text-decoration-none" href="mailto:info@company.com">info@company.com</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="col-md-4 pt-5">
-                    <h2 class="h2 text-light border-bottom pb-3 border-light">Products</h2>
-                    <ul class="list-unstyled text-light footer-link-list">
-                        <li><a class="text-decoration-none" href="#">Luxury</a></li>
-                        <li><a class="text-decoration-none" href="#">Sport Wear</a></li>
-                        <li><a class="text-decoration-none" href="#">Men's Shoes</a></li>
-                        <li><a class="text-decoration-none" href="#">Women's Shoes</a></li>
-                        <li><a class="text-decoration-none" href="#">Popular Dress</a></li>
-                        <li><a class="text-decoration-none" href="#">Gym Accessories</a></li>
-                        <li><a class="text-decoration-none" href="#">Sport Shoes</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-md-4 pt-5">
-                    <h2 class="h2 text-light border-bottom pb-3 border-light">Further Info</h2>
-                    <ul class="list-unstyled text-light footer-link-list">
-                        <li><a class="text-decoration-none" href="#">Home</a></li>
-                        <li><a class="text-decoration-none" href="#">About Us</a></li>
-                        <li><a class="text-decoration-none" href="#">Shop Locations</a></li>
-                        <li><a class="text-decoration-none" href="#">FAQs</a></li>
-                        <li><a class="text-decoration-none" href="#">Contact</a></li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <div class="row text-light mb-4">
-                <div class="col-12 mb-3">
-                    <div class="w-100 my-3 border-top border-light"></div>
-                </div>
-                <div class="col-auto me-auto">
-                    <ul class="list-inline text-left footer-icons">
-                        <li class="list-inline-item border border-light rounded-circle text-center">
-                            <a class="text-light text-decoration-none" target="_blank" href="http://facebook.com/"><i class="fab fa-facebook-f fa-lg fa-fw"></i></a>
-                        </li>
-                        <li class="list-inline-item border border-light rounded-circle text-center">
-                            <a class="text-light text-decoration-none" target="_blank" href="https://www.instagram.com/"><i class="fab fa-instagram fa-lg fa-fw"></i></a>
-                        </li>
-                        <li class="list-inline-item border border-light rounded-circle text-center">
-                            <a class="text-light text-decoration-none" target="_blank" href="https://twitter.com/"><i class="fab fa-twitter fa-lg fa-fw"></i></a>
-                        </li>
-                        <li class="list-inline-item border border-light rounded-circle text-center">
-                            <a class="text-light text-decoration-none" target="_blank" href="https://www.linkedin.com/"><i class="fab fa-linkedin fa-lg fa-fw"></i></a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-auto">
-                    <label class="sr-only" for="subscribeEmail">Email address</label>
-                    <div class="input-group mb-2">
-                        <input type="text" class="form-control bg-dark border-light" id="subscribeEmail" placeholder="Email address">
-                        <div class="input-group-text btn-success text-light">Subscribe</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="w-100 bg-black py-3">
-            <div class="container">
-                <div class="row pt-2">
-                    <div class="col-12">
-                        <p class="text-left text-light">
-                            Copyright &copy; 2021 Company Name 
-                            | Designed by <a rel="sponsored" href="https://templatemo.com" target="_blank">TemplateMo</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </footer>
-    <!-- End Footer -->
-
-    <!-- Start Script -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="assets/js/jquery-1.11.0.min.js"></script>
-    <script src="assets/js/jquery-migrate-1.2.1.min.js"></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/templatemo.js"></script>
-    <script src="assets/js/custom.js"></script>
-    <!-- End Script -->
-</body>
-
-</html>
-
-
-
-
-
-
-
-{% comment %} 
- <!DOCTYPE html>
- <html>
- <head>
-   <title>Orders</title>
-   <style>
-     body {
-       font-family: Arial, sans-serif;
-       margin: 0;
-       padding: 20px;
-       background-color: #f2f2f2;
-     }
-     
-     .container {
-       max-width: 800px;
-       margin: 0 auto;
-       background-color: white;
-       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-       padding: 20px;
-       border-radius: 5px;
-     }
-     
-     h1 {
-       margin-bottom: 20px;
-       color: #333;
-       text-align: center;
-     }
-     
-     table {
-       width: 100%;
-       border-collapse: collapse;
-     }
-     
-     th, td {
-       border: 1px solid #ccc;
-       padding: 10px;
-       text-align: center;
-     }
-     
-     th {
-       background-color: #f7f7f7;
-       color: #333;
-       font-weight: bold;
-     }
-     
-     tr:nth-child(even) {
-       background-color: #f2f2f2;
-     }
-     
-     .no-orders {
-       text-align: center;
-       font-size: 18px;
-       color: #777;
-       margin-top: 30px;
-     }
-     
-     .product-image {
-       width: 50px;
-       height: auto;
-     }
-   </style>
- </head>
- <body>
-    <div class="container">
-      <h1>Orders</h1>
-
-    {% if orders %}
-    <table>
-      <thead>
-        <tr>
-          <th>Order ID</th>
-          <th>Order Date</th>
-          <th>Product</th>
-          <th>Quantity</th>
-          <th>Total Amount</th>
-          <th>Status</th>
-          <th>cancel order</th>
-          <th>return</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for order in orders %}
-        <tr>
-          <td>{{ order.id }}</td>
-          <td>{{ order.order_date }}</td>
-          <td>
-            <img class="product-image" src="{{ order.product.image2.url }}" alt="{{ order.product.name }}">
-          </td>
-          <td>
-            {% for item in cart_items %}
-              {{ item.quantity }}
-            {% endfor %}
-          </td>
-          
-          <td>${{ order.total_amount }}</td>
+          <td>{{ order.user_id.email }}</td>
+          <td>{{ order.user_id.phone_number }}</td>
+          <td>{{ order.address.address_line }},{{ order.address.state }}</td>
+          <td>{{ order.payment_method }}</td>
           <td>{{ order.status }}</td>
-
           <td>
-            {% if order.status != 'Delivered' %}
-            <form method="POST" action="{% url 'cancel_order' %}">
-              {% csrf_token %}
-              <input type="hidden" name="order_id" value="{{ order.id }}">
-              <button type="submit">Cancel Order</button>
-            </form>
-            {% else %}
-            <p>Order cannot be cancelled.</p>
-            {% endif %}
-          </td>
+            {% if not order.is_cancelled %}
+            {% if not order.is_returned %}
+            {% if order.status != "Returned" %}
 
-          <td>
-            {% if order.status == 'Delivered' and not order.is_returned %}
-            <form method="POST" action="{% url 'return_order' %}">
-              {% csrf_token %}
-              <input type="hidden" name="order_id" value="{{ order.id }}">
-              <button type="submit">Return Order</button>
-            </form>
-            {% else %}
-            <p>Order cannot be returned.</p>
+              <form method="POST" action="{% url 'cancel_order' %}">
+                {% csrf_token %}
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+                <button type="submit">Cancel Order</button>
+              </form>
             {% endif %}
+            {% endif %}
+            {% endif %}
+            
           </td>
         </tr>
-        {% endfor %}
+      {% endfor %}
+      
       </tbody>
     </table>
-    {% else %}
-    <p>No orders found.</p>
-    {% endif %}
   </div>
-</body> {% endcomment %}
+  
+  
+    
+  
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+
+	<!-- Footer -->
+	<footer class="bg3 p-t-75 p-b-32">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 col-lg-3 p-b-50">
+					<h4 class="stext-301 cl0 p-b-30">
+						Categories
+					</h4>
+
+					<ul>
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Women
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Men
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Shoes
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Watches
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="col-sm-6 col-lg-3 p-b-50">
+					<h4 class="stext-301 cl0 p-b-30">
+						Help
+					</h4>
+
+					<ul>
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Track Order
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Returns 
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Shipping
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								FAQs
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="col-sm-6 col-lg-3 p-b-50">
+					<h4 class="stext-301 cl0 p-b-30">
+						GET IN TOUCH
+					</h4>
+
+					<p class="stext-107 cl7 size-201">
+						Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us on (+1) 96 716 6879
+					</p>
+
+					<div class="p-t-27">
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+							<i class="fa fa-facebook"></i>
+						</a>
+
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+							<i class="fa fa-instagram"></i>
+						</a>
+
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+							<i class="fa fa-pinterest-p"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="col-sm-6 col-lg-3 p-b-50">
+					<h4 class="stext-301 cl0 p-b-30">
+						Newsletter
+					</h4>
+
+					<form>
+						<div class="wrap-input1 w-full p-b-4">
+							<input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email" placeholder="email@example.com">
+							<div class="focus-input1 trans-04"></div>
+						</div>
+
+						<div class="p-t-18">
+							<button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
+								Subscribe
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="p-t-40">
+				<div class="flex-c-m flex-w p-b-18">
+					<a href="#" class="m-all-1">
+						<img src="images/icons/icon-pay-01.png" alt="ICON-PAY">
+					</a>
+
+					<a href="#" class="m-all-1">
+						<img src="images/icons/icon-pay-02.png" alt="ICON-PAY">
+					</a>
+
+					<a href="#" class="m-all-1">
+						<img src="images/icons/icon-pay-03.png" alt="ICON-PAY">
+					</a>
+
+					<a href="#" class="m-all-1">
+						<img src="images/icons/icon-pay-04.png" alt="ICON-PAY">
+					</a>
+
+					<a href="#" class="m-all-1">
+						<img src="images/icons/icon-pay-05.png" alt="ICON-PAY">
+					</a>
+				</div>
+
+				<p class="stext-107 cl6 txt-center">
+					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+
+				</p>
+			</div>
+		</div>
+	</footer>
+
+
+	<!-- Back to top -->
+	<div class="btn-back-to-top" id="myBtn">
+		<span class="symbol-btn-back-to-top">
+			<i class="zmdi zmdi-chevron-up"></i>
+		</span>
+	</div>
+
+	<!-- Modal1 -->
+	<div class="wrap-modal1 js-modal1 p-t-60 p-b-20">
+		<div class="overlay-modal1 js-hide-modal1"></div>
+
+		<div class="container">
+			<div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
+				<button class="how-pos3 hov3 trans-04 js-hide-modal1">
+					<img src="images/icons/icon-close.png" alt="CLOSE">
+				</button>
+
+				<div class="row">
+					<div class="col-md-6 col-lg-7 p-b-30">
+						<div class="p-l-25 p-r-30 p-lr-0-lg">
+							<div class="wrap-slick3 flex-sb flex-w">
+								<div class="wrap-slick3-dots"></div>
+								<div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
+
+								<div class="slick3 gallery-lb">
+									<div class="item-slick3" data-thumb="images/product-detail-01.jpg">
+										<div class="wrap-pic-w pos-relative">
+											<img src="images/product-detail-01.jpg" alt="IMG-PRODUCT">
+
+											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="images/product-detail-01.jpg">
+												<i class="fa fa-expand"></i>
+											</a>
+										</div>
+									</div>
+
+									<div class="item-slick3" data-thumb="images/product-detail-02.jpg">
+										<div class="wrap-pic-w pos-relative">
+											<img src="images/product-detail-02.jpg" alt="IMG-PRODUCT">
+
+											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="images/product-detail-02.jpg">
+												<i class="fa fa-expand"></i>
+											</a>
+										</div>
+									</div>
+
+									<div class="item-slick3" data-thumb="images/product-detail-03.jpg">
+										<div class="wrap-pic-w pos-relative">
+											<img src="images/product-detail-03.jpg" alt="IMG-PRODUCT">
+
+											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="images/product-detail-03.jpg">
+												<i class="fa fa-expand"></i>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-md-6 col-lg-5 p-b-30">
+						<div class="p-r-50 p-t-5 p-lr-0-lg">
+							<h4 class="mtext-105 cl2 js-name-detail p-b-14">
+								Lightweight Jacket
+							</h4>
+
+							<span class="mtext-106 cl2">
+								$58.79
+							</span>
+
+							<p class="stext-102 cl3 p-t-23">
+								Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat ornare feugiat.
+							</p>
+							
+							<!--  -->
+							<div class="p-t-33">
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										Size
+									</div>
+
+									<div class="size-204 respon6-next">
+										<div class="rs1-select2 bor8 bg0">
+											<select class="js-select2" name="time">
+												<option>Choose an option</option>
+												<option>Size S</option>
+												<option>Size M</option>
+												<option>Size L</option>
+												<option>Size XL</option>
+											</select>
+											<div class="dropDownSelect2"></div>
+										</div>
+									</div>
+								</div>
+
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										Color
+									</div>
+
+									<div class="size-204 respon6-next">
+										<div class="rs1-select2 bor8 bg0">
+											<select class="js-select2" name="time">
+												<option>Choose an option</option>
+												<option>Red</option>
+												<option>Blue</option>
+												<option>White</option>
+												<option>Grey</option>
+											</select>
+											<div class="dropDownSelect2"></div>
+										</div>
+									</div>
+								</div>
+
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-204 flex-w flex-m respon6-next">
+										<div class="wrap-num-product flex-w m-r-20 m-tb-10">
+											<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+												<i class="fs-16 zmdi zmdi-minus"></i>
+											</div>
+
+											<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
+
+											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+												<i class="fs-16 zmdi zmdi-plus"></i>
+											</div>
+										</div>
+
+										<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+											Add to cart
+										</button>
+									</div>
+								</div>	
+							</div>
+
+							<!--  -->
+							<div class="flex-w flex-m p-l-100 p-t-40 respon7">
+								<div class="flex-m bor9 p-r-10 m-r-11">
+									<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
+										<i class="zmdi zmdi-favorite"></i>
+									</a>
+								</div>
+
+								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Facebook">
+									<i class="fa fa-facebook"></i>
+								</a>
+
+								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Twitter">
+									<i class="fa fa-twitter"></i>
+								</a>
+
+								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Google Plus">
+									<i class="fa fa-google-plus"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!--===============================================================================================-->	
+<script src="../static/assets/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/assets/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/assets/vendor/bootstrap/js/popper.js"></script>
+	<script src="../static/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/assets/vendor/select2/select2.min.js"></script>
+	<script>
+		$(".js-select2").each(function(){
+			$(this).select2({
+				minimumResultsForSearch: 20,
+				dropdownParent: $(this).next('.dropDownSelect2')
+			});
+		})
+	</script>
+<!--===============================================================================================-->
+	<script src="../static/assets/vendor/daterangepicker/moment.min.js"></script>
+	<script src="../static/assets/vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/assets/vendor/slick/slick.min.js"></script>
+	<script src="../static/assets/js/slick-custom.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/assets/vendor/parallax100/parallax100.js"></script>
+	<script>
+        $('.parallax100').parallax100();
+	</script>
+<!--===============================================================================================-->
+	<script src="../static/assets/vendor/MagnificPopup/jquery.magnific-popup.min.js"></script>
+	<script>
+		$('.gallery-lb').each(function() { // the containers for all your galleries
+			$(this).magnificPopup({
+		        delegate: 'a', // the selector for gallery item
+		        type: 'image',
+		        gallery: {
+		        	enabled:true
+		        },
+		        mainClass: 'mfp-fade'
+		    });
+		});
+	</script>
+<!--===============================================================================================-->
+	<script src="../static/assets/vendor/isotope/isotope.pkgd.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/assets/vendor/sweetalert/sweetalert.min.js"></script>
+	<script>
+		$('.js-addwish-b2').on('click', function(e){
+			e.preventDefault();
+		});
+
+		$('.js-addwish-b2').each(function(){
+			var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+			$(this).on('click', function(){
+				swal(nameProduct, "is added to wishlist !", "success");
+
+				$(this).addClass('js-addedwish-b2');
+				$(this).off('click');
+			});
+		});
+
+		$('.js-addwish-detail').each(function(){
+			var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+
+			$(this).on('click', function(){
+				swal(nameProduct, "is added to wishlist !", "success");
+
+				$(this).addClass('js-addedwish-detail');
+				$(this).off('click');
+			});
+		});
+
+		/*---------------------------------------------*/
+
+		$('.js-addcart-detail').each(function(){
+			var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+			$(this).on('click', function(){
+				swal(nameProduct, "is added to cart !", "success");
+			});
+		});
+	</script>
+<!--===============================================================================================-->
+	<script src="../static/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+	<script>
+		$('.js-pscroll').each(function(){
+			$(this).css('position','relative');
+			$(this).css('overflow','hidden');
+			var ps = new PerfectScrollbar(this, {
+				wheelSpeed: 1,
+				scrollingThreshold: 1000,
+				wheelPropagation: false,
+			});
+
+			$(window).on('resize', function(){
+				ps.update();
+			})
+		});
+	</script>
+<!--===============================================================================================-->
+	<script src="../static/assets/js/main.js"></script>
+	
+
+
+
+
+
+
+
+
+
+</body>
+</html>

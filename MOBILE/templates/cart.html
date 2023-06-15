@@ -175,6 +175,7 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>.flex-w {
 		display: flex;
 		justify-content: space-between;
@@ -195,31 +196,7 @@
 	  font-size: 18px;
 	}
   </style>
-<script>
-	function updateTotal(quantityInput, price, cartItemId) {
-		var quantity = parseInt(quantityInput.value);
-		var subtotalElement = document.getElementById('subtotal-value-' + cartItemId);
-	
-		// Update the subtotal
-		var subtotal = quantity * price;
-		subtotalElement.textContent = subtotal.toFixed(2);
-	
-		// Submit the form
-		var form = quantityInput.closest('form');
-		form.submit();
-		calculateGrandTotal();
-	}
-	function calculateGrandTotal() {
-		var grandTotal = 0;
-		$('.subtotal-valu').each(function() {
-		  var subtotal = parseFloat($(this).text().substring(1)); // Remove the '$' symbol
-		  if (!isNaN(subtotal)) {
-			grandTotal += subtotal;
-		  }
-		});
-		$('#cart-total').text('$' + grandTotal.toFixed(2));
-	  }
-	</script>
+
 	
 	
   
@@ -579,13 +556,13 @@
 									<td>{{ cart_item.product_id.name }}</td>
 									<td>${{ cart_item.product_id.price }}</td>
 									<td>
-										<form action="{% url 'add_to_cart' %}" method="post" onsubmit="updateCartItem(event, this)">
+										
 
-										{% csrf_token %}
+									
 										<input type="hidden" name="cart_id" value="{{ cart_item.cart_id }}">
 										<input type="hidden" name="name" value="{{ cart_item.product_id.name }}">
 										<input type="hidden" name="product_id" value="{{ cart_item.product_id.product_id }}">
-										<input type="number" class="quantity-input" name="quantity" value="{{ cart_item.quantity }}" min="1" id="quantity-{{ cart_item.cart_id }}" style="width: 50px;border: 1px solid black"  onchange="updateTotal(this, {{ cart_item.product_id.price }}, {{ cart_item.cart_id }})">
+										<input type="number" data-item-id="{{ cart_item.cart_id }}" class="choose-quantity" name="quantity" value="{{ cart_item.quantity }}" min="1" id="quantity-{{ cart_item.cart_id }}" style="width: 50px;border: 1px solid black"  onchange="updateTotal(this, {{ cart_item.product_id.price }}, {{ cart_item.cart_id }})">
 
 										{% if error_messages %}
 										  {% for error_message in error_messages %}
@@ -596,7 +573,7 @@
 											{% endif %}
 										  {% endfor %}
 										{% endif %}
-									  </form>
+									  
 									</td>
 									<td id="subtotal-{{ cart_item.cart_id }}">$<span id="subtotal-value-{{ cart_item.cart_id }}">{{ cart_item.sub_total }}</span></td>
 									<td>
@@ -614,7 +591,7 @@
 						</div>  
 					</div>
 				</div>
-				{% if cart_items%}
+				
 				<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
 					<div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
 						<h4 class="mtext-109 cl2 p-b-30">
@@ -627,9 +604,9 @@
 								</span>
 							</div>
 						
-							{% if total%}
-							<p> <span id="grand-total" style="font-weight: bold; font-size: 50px;">{{total}}<span></p>
-							{%endif%}
+							
+							<p> <span id="cart-sum" style="font-weight: bold; font-size: 50px;">{{total}}<span></p>
+							
 							
 						</div>
 						<button  class="checkout-btn" onclick="window.location.href='{% url 'checkout' %}'">Proceed to Checkout</button>
@@ -637,12 +614,13 @@
 					</div>
 					
 				</div>
-				{%endif%}
+				
 				
 			</div>
 		</div>
 	
 	</div>
+	
 		
 	
 		
@@ -815,54 +793,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			});
 		});
 	</script>
-	<script>
-		function increaseQuantity(button, price, cartId) {
-		  var quantityInput = button.parentNode.querySelector('input[type="number"]');
-		  var quantity = parseInt(quantityInput.value) + 1;
-		  quantityInput.value = quantity;
-		
-		  updateQuantity(quantityInput, price, cartId);
-		}
-		
-		function decreaseQuantity(button, price, cartId) {
-		  var quantityInput = button.parentNode.querySelector('input[type="number"]');
-		  var quantity = parseInt(quantityInput.value) - 1;
-		  if (quantity < 1) {
-			quantity = 1;
-		  }
-		  quantityInput.value = quantity;
-		
-		  updateQuantity(quantityInput, price, cartId);
-		}
-		
-		function updateQuantity(input, price, cartId) {
-		  var quantity = input.value;
-		
-		  // Send AJAX request to update quantity in the database
-		  var xhr = new XMLHttpRequest();
-		  xhr.open('POST', '/update_quantity/', true);
-		  xhr.setRequestHeader('Content-Type', 'application/json');
-		  xhr.onload = function () {
-			if (xhr.status === 200) {
-			  var response = JSON.parse(xhr.responseText);
-			  if (response.success) {
-				// Update the subtotal and other related calculations
-				var subtotal = price * quantity;
-				document.getElementById('subtotal-value-' + cartId).textContent = subtotal.toFixed(2);
-
-				
-				// Update the total cart value if necessary
-				var total = response.total;
-				document.getElementById('cart-total').innerHTML = '$' + total;
-			  } else {
-				// Handle the case when the update was not successful
-				console.error(response.error);
-			  }
-			}
-		  };
-		  xhr.send(JSON.stringify({ cartId: cartId, quantity: quantity }));
-		}
-		</script>
+	
 		
 	  
 <!--===============================================================================================-->	
@@ -949,42 +880,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="../static/assets/vendor/isotope/isotope.pkgd.min.js"></script>
 <!--===============================================================================================-->
 	<script src="../static/assets/vendor/sweetalert/sweetalert.min.js"></script>
-	<script>
-		$('.js-addwish-b2').on('click', function(e){
-			e.preventDefault();
-		});
-
-		$('.js-addwish-b2').each(function(){
-			var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to wishlist !", "success");
-
-				$(this).addClass('js-addedwish-b2');
-				$(this).off('click');
-			});
-		});
-
-		$('.js-addwish-detail').each(function(){
-			var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
-
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to wishlist !", "success");
-
-				$(this).addClass('js-addedwish-detail');
-				$(this).off('click');
-			});
-		});
-
-		/*---------------------------------------------*/
-
-		$('.js-addcart-detail').each(function(){
-			var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to cart !", "success");
-			});
-		});
 	
-	</script>
 <!--===============================================================================================-->
 	<script src="../static/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 	<script>
@@ -1002,6 +898,67 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			})
 		});
 	</script>
+	 {% comment %} <script>
+       $(".choose-quantity").change(function(){
+		
+		var item_id=$(this).data("item-id")
+		var quantity=$(this).val()
+
+		$.ajax({
+			url:"/quantityupdate/",
+			type:'GET',
+			data:{
+				itemid:item_id,
+				quantity:quantity
+
+			},
+			success:function(response){
+                $("#subtotal-"+item_id).html(response.total);
+				$("#cart-sum").html(response.total_sum);
+			},
+			error:function(xhr,errmsg,err){
+				alert('error')
+			}
+		})
+
+	   })
+
+	</script> {% endcomment %}
+
+	<script>
+		$(".choose-quantity").change(function() {
+			var item_id = $(this).data("item-id");
+			var quantity = $(this).val();
+	
+			$.ajax({
+				url: "/quantityupdate/",
+				type: "GET",
+				data: {
+					itemid: item_id,
+					quantity: quantity
+				},
+				success: function(response) {
+					if (response.error) {
+						alert(response.error);  // Display the error message
+					} else {
+						$("#subtotal-" + item_id).html(response.total);
+						$("#cart-sum").html(response.total_sum);
+					}
+				},
+				error: function(xhr, errmsg, err) {
+					alert("Error occurred");
+				}
+			});
+		});
+	</script>
+	
+if (response.error) {
+                    alert(response.error);  // Display the error message
+                } else {
+                    $("#subtotal-" + item_id).html(response.total);
+                    $("#cart-sum").html(response.total_sum);
+                }
+	
 <!--===============================================================================================-->
 	<script src="../static/assets/js/main.js"></script>
     <script src="../static/assets/js/map-custom.js.js"></script>
@@ -1039,3 +996,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 </body>
 </html>
+
+
+
+
+

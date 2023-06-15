@@ -69,32 +69,27 @@
                 
                
                 <li>
-                    <a href="{% url 'admin_home' %}">
-                        <i class="ti-panel"></i>
-                        <p>Dashboard</p>
-                    </a>
+                    <a href="{% url 'shop'%}">Shop</a>
                 </li>
-               
+
+                <li class="label1" data-label1="hot">
+                    <a href="{% url 'orders'%}">orders</a>
+                </li>
+
                 <li>
-                    <a href="{% url 'viewcatogery' %}">
-                        <i class="ti-text"></i>
-                        <p>Category Details</p>
-                    </a>
+                    <a href="{% url 'deli'%}">delivered_products</a>
                 </li>
-               
+
+                
                 <li>
-                    <a href="{% url 'productview' %}">
-                        <i class="ti-pencil-alt2"></i>
-                        <p>Product Details</p>
-                    </a>
+                    <a href="{% url 'wish'%}">Wishlist</a>
+                </li>
+                
+
+                <li>
+                    <a href="{% url 'ret'%}">returned_products</a>
                 </li>
                 <li>
-                    <a href="{% url 'view_coupon' %}">
-                        <i class="ti-view-list-alt"></i>
-                        <p>Coupon Details</p>
-                    </a>
-                </li>
-               
                 
                 
 				 <li><a href="/admin_logout" class="btn btn-outline-success">Logout</a></li> 
@@ -150,7 +145,7 @@
         </nav>
 
 
-        <h1>View deliverd products</h1>
+        <h1>View Returned products</h1>
         {% if ret %}
         <div class="content">
           <div class="container-fluid">
