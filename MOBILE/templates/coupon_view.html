@@ -69,54 +69,60 @@
             </div>
 
             <ul class="nav">
+                
+                
                 <li>
-                    <a href="dashboard.html">
-                        <i class="ti-panel"></i>
-                        <p>Dashboard</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="user.html">
+                    <a href="{% url 'userlist' %}">
                         <i class="ti-user"></i>
-                        <p>User Profile</p>
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="table.html">
-                        <i class="ti-view-list-alt"></i>
-                        <p>Table List</p>
+                        <p>User Details</p>
                     </a>
                 </li>
                 <li>
-                    <a href="typography.html">
+                    <a href="{% url 'viewcatogery' %}">
                         <i class="ti-text"></i>
-                        <p>Typography</p>
+                        <p>Category Details</p>
                     </a>
                 </li>
                 <li>
-                    <a href="icons.html">
+                    <a href="{% url 'viewvariant' %}">
+                        <i class="ti-text"></i>
+                        <p>variant Details</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'view_orders' %}">
+                        <i class="ti-text"></i>
+                        <p>Order Details</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'productview' %}">
                         <i class="ti-pencil-alt2"></i>
-                        <p>Icons</p>
+                        <p>Product Details</p>
                     </a>
                 </li>
                 <li>
-                    <a href="maps.html">
-                        <i class="ti-map"></i>
-                        <p>Maps</p>
+                    <a href="{% url 'view_coupon' %}">
+                        <i class="ti-view-list-alt"></i>
+                        <p>Coupon Details</p>
                     </a>
                 </li>
                 <li>
-                    <a href="notifications.html">
-                        <i class="ti-bell"></i>
-                        <p>Notifications</p>
+                    <a href="{% url 'v_deli' %}">
+                        <i class="ti-view-list-alt"></i>
+                        <p>delivered product</p>
                     </a>
                 </li>
-				<li class="active-pro">
-                    <a href="upgrade.html">
-                        <i class="ti-export"></i>
-                        <p>Upgrade to PRO</p>
+                <li>
+                    <a href="{% url 'v_retu' %}">
+                        <i class="ti-view-list-alt"></i>
+                        <p>retunred product</p>
                     </a>
                 </li>
+               
+                
+                
+				 <li><a href="/admin_logout" class="btn btn-outline-success">Logout</a></li> 
             </ul>
     	</div>
     </div>
@@ -168,7 +174,13 @@
             </div>
         </nav>
 
-
+        <div class="content">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card">
+                    <div class="header">
+                      <h4 class="title">coupon</h4>
         
     <div class="ms-3 d-flex justify-content-center align-items-center"><a href="{% url 'add_coupon' %}" class="btn btn-success">Add Coupon</a></div>
 
@@ -179,7 +191,7 @@
         <tr>
             <th>code</th>
             <th>discount</th>
-            <th>referral_code</th>
+            <th>minimum amount</th>
             <th>valid_from</th>
             <th>valid_to</th>
             <th>Actions</th>
@@ -192,26 +204,31 @@
       {% for cou in coup %}
       <tr>
           <td>{{ cou.code }}</td>
-          <td>{{ cou.discount}}</td>
-          <td>{{ cou.copuon_category}}</td>
+          <td>{{ cou.coupon_dis_amount}}</td>
+          <td>{{ cou.coupon_minmun_amount}}</td>
           
-          <td>{{ cou.referral_code }}</td>
           <td>{{ cou.valid_from }}</td>
-          <td>{{ cou.valid_to}}</td>
+          <td>{{ cou.valid_to }}</td>
+        
           
          
 
           
-          {% comment %} <td>
-              <a href="/edit/{{ product.product_id }}" class="btn btn-warning">Edit</a>
-              <a href="/delete/{{ product.product_id }}" class="btn btn-primary">Delete</a>
-          </td> {% endcomment %}
+         <td>
+              <a href="/editcoup/{{ cou.id}}" class="btn btn-warning">Edit</a>
+              <a href="/deletecoup/{{ cou.id}}" class="btn btn-primary">Delete</a>
+          </td> 
       </tr>
       {% endfor %}
   </tbody>
        
       </table>
-
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
         <footer class="footer">
             <div class="container-fluid">
                 <nav class="pull-left">

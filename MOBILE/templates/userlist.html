@@ -68,15 +68,27 @@
             <ul class="nav">
                 <li>
                     <a href="{% url 'admin_home' %}">
-                        <i class="ti-panel"></i>
+                        <i class="ti-user"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
-               
+                
+                <li>
+                    <a href="{% url 'userlist' %}">
+                        <i class="ti-user"></i>
+                        <p>User Details</p>
+                    </a>
+                </li>
                 <li>
                     <a href="{% url 'viewcatogery' %}">
                         <i class="ti-text"></i>
                         <p>Category Details</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'viewvariant' %}">
+                        <i class="ti-text"></i>
+                        <p>variant Details</p>
                     </a>
                 </li>
                 <li>
@@ -95,6 +107,18 @@
                     <a href="{% url 'view_coupon' %}">
                         <i class="ti-view-list-alt"></i>
                         <p>Coupon Details</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'v_deli' %}">
+                        <i class="ti-view-list-alt"></i>
+                        <p>delivered product</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'v_retu' %}">
+                        <i class="ti-view-list-alt"></i>
+                        <p>retunred product</p>
                     </a>
                 </li>
                
@@ -152,7 +176,11 @@
             </div>
         </nav>
 
-
+        <form class="d-flex" method="GET">
+            {% csrf_token %}
+            <input class="form-control me-2 container" type="text" name="search" placeholder="Search product" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
@@ -162,6 +190,7 @@
                                 <h4 class="title">User Listing</h4>
                                 <p class="category">All detials of users</p>
                             </div>
+                           
                             <div class="content table-responsive table-full-width">
                                 <table class="table table-striped">
                                     <thead>
@@ -172,7 +201,7 @@
                                     	<th>Action</th>
                                     </thead>
                                     <tbody>
-                                        {% for user in users%}
+                                        {% for user in page_obj%}
                                         <tr>
                                         	<td>{{user.id}}</td>
                                         	<td>{{user.name}}</td>
@@ -190,7 +219,34 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
-
+                                <footer class="footer">
+                                    <div class="container-fluid justify-content:center;">
+                                        <nav class="pull-left">
+                                           <!-- Pagination links -->
+                          <div class="pagination">
+                            {% if page_obj.has_previous %}
+                                <a href="?page=1">First</a>
+                                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                            {% endif %}
+                          
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <span class="current-page">{{ num }}</span>
+                                {% else %}
+                                    <a href="?page={{ num }}">{{ num }}</a>
+                                {% endif %}
+                            {% endfor %}
+                          
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                                <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                            {% endif %}
+                          </div>
+                          
+                                        
+                                    </div>
+                                </footer>
+                          
                             </div>
                         </div>
                     </div>

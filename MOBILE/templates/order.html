@@ -120,12 +120,8 @@
 					<div class="menu-desktop">
 						<ul class="main-menu">
 							<li class="active-menu">
-								<a href="index.html">Home</a>
-								<ul class="sub-menu">
-									<li><a href="index.html">Homepage 1</a></li>
-									<li><a href="home-02.html">Homepage 2</a></li>
-									<li><a href="home-03.html">Homepage 3</a></li>
-								</ul>
+								<a href="{% url 'home'%}">Home</a>
+								
 							</li>
 
 							<li>
@@ -141,14 +137,15 @@
 							</li>
 
 							
+							<li>
+								<a href="{% url 'wish'%}">Wishlist</a>
+							</li>
 							
 
 							<li>
-								<a href="">returned_products</a>
+								<a href="{% url 'ret'%}">returned_products</a>
 							</li>
-							<li>
-								<a href="contact.html">Contact</a>
-							</li>
+							
 						</ul>
                         <li class="nav-item">
                             <a class="btn btn-outline-success" href="/user_logout" style="margin-left: 80px; font-weight: bold; font-size: 20px;" >Logout</a>
@@ -172,7 +169,33 @@
 				</nav>
 			</div>	
 		</div>
-
+		<div class="wrap-header-cart js-panel-cart">
+			<div class="s-full js-hide-cart" ></div>
+	
+			<div class="header-cart flex-col-l p-l-65 p-r-25">
+				<div class="header-cart-title flex-w flex-sb-m p-b-8">
+					<span class="mtext-103 cl2">
+						Your Cart
+					</span>
+	
+					<div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
+						<i class="zmdi zmdi-close"></i>
+					</div>
+				</div>
+				
+			
+	
+						<div class="header-cart-buttons flex-w w-full">
+							<a href="{% url 'add_to_cart'%}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+								View Cart
+							</a>
+	
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!-- Header Mobile -->
 		<div class="wrap-header-mobile">
 			<!-- Logo moblie -->		
@@ -344,6 +367,7 @@
           <th>payment method</th>
           <th>Status</th>
           <th>Cancel Order</th>
+		  <th>Download invoice</th>
          
         </tr>
       </thead>
@@ -352,8 +376,8 @@
         <tr>
           <td>{{ order.id }}</td>
           <td>{{ order.order_date }}</td>
-          <td>{{ order.product.name }}</td>
-          <td><div class="how-itemcart1" style="height: 50px; width: 50px;"><img src="{{ order.product.image1.url }}" alt="Product Image"></div></td>
+          <td>{{ order.varient_Key.product_key.name }}</td>
+          <td><div class="how-itemcart1" style="height: 50px; width: 50px;"><img src="{{ order.varient_Key.image.url }}" alt="Product Image"></div></td>
           <td>{{ order.total_quantity }}</td>
           <td>{{ order.total_amount }}</td>
           <td>{{ order.user_id.name}}</td>
@@ -366,6 +390,7 @@
             {% if not order.is_cancelled %}
             {% if not order.is_returned %}
             {% if order.status != "Returned" %}
+			{% if order.status != "Delivered"%}
 
               <form method="POST" action="{% url 'cancel_order' %}">
                 {% csrf_token %}
@@ -375,8 +400,16 @@
             {% endif %}
             {% endif %}
             {% endif %}
+			{% endif %}
             
           </td>
+		  <td>
+		  <form id="downloadForm" action="{% url 'userpdf' %}" method="post">
+			{% csrf_token %}
+			<input type="hidden" name="order_id" id="order_id_input" value="{{order.id}}">
+			<button type="submit">Download</button>
+		  </form>
+		  </td>
         </tr>
       {% endfor %}
       

@@ -67,33 +67,65 @@
 
             <ul class="nav">
                 
-               
+                <li>
+                    <a href="{% url 'admin_home' %}">
+                        <i class="ti-user"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li> 
               <li>
-								<a href="{% url 'shop'%}">Shop</a>
-							</li>
-
-							<li class="label1" data-label1="hot">
-								<a href="{% url 'orders'%}">orders</a>
-							</li>
-
-							<li>
-								<a href="{% url 'deli'%}">delivered_products</a>
-							</li>
-
-							
-							<li>
-								<a href="{% url 'wish'%}">Wishlist</a>
-							</li>
-							
-
-							<li>
-								<a href="{% url 'ret'%}">returned_products</a>
-							</li>
-							<li>
-                
-                
-				 <li><a href="/admin_logout" class="btn btn-outline-success">Logout</a></li> 
-            </ul>
+                  <a href="{% url 'userlist' %}">
+                      <i class="ti-user"></i>
+                      <p>User Details</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'viewcatogery' %}">
+                      <i class="ti-text"></i>
+                      <p>Category Details</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'viewvariant' %}">
+                      <i class="ti-text"></i>
+                      <p>variant Details</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'view_orders' %}">
+                      <i class="ti-text"></i>
+                      <p>Order Details</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'productview' %}">
+                      <i class="ti-pencil-alt2"></i>
+                      <p>Product Details</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'view_coupon' %}">
+                      <i class="ti-view-list-alt"></i>
+                      <p>Coupon Details</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'v_deli' %}">
+                      <i class="ti-view-list-alt"></i>
+                      <p>delivered product</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'v_retu' %}">
+                      <i class="ti-view-list-alt"></i>
+                      <p>retunred product</p>
+                  </a>
+              </li>
+             
+              
+              
+       <li><a href="/admin_logout" class="btn btn-outline-success">Logout</a></li> 
+          </ul>
     	</div>
     </div>
 

@@ -11,4 +11,6 @@ admin.site.register(Uuser)
 admin.site.register(Address)
 admin.site.register(Product)
 admin.site.register(category)
+admin.site.register(Varient)
+admin.site.register(Guest)
 

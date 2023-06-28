@@ -14,75 +14,84 @@
 
 <body>
 
-    <h1 class="text-center">Edit Product{{ prod.name }}</h1>
+   
     
 
-        <div class="container">
-
-            <div class="row justify-content-center mt-5">
-              <div class="col-md-6">
-                
+    <h1 class="text-center">Edit Product {{ prod.product_key.name }}</h1>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
                 <form method="POST" enctype="multipart/form-data">
-                                    {% csrf_token %} 
-                  <div >
-                    
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Product Name</label>
+                        <input type="text" class="form-control" id="name" name="product" value="{{ prod.product_key.name }}" placeholder="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Variant Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ prod.varient_name }}" placeholder="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="text" class="form-control" id="price" name="price" value="{{ prod.price }}" placeholder="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">offer price</label>
+                        <input type="text" class="form-control" id="offer price" name="offer price" value="{{ prod.price }}" placeholder="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="text" class="form-control" id="quantity" name="quantity" value="{{ prod.quantity }}" placeholder="" required>
+                    </div>
                    
-                   
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{ prod.name }} "placeholder="" required>
-                    
-                  </div>
-                  <div >
-                    <label for="price">price</label>
-                    <input type="text" class="form-control" id="price" name="price" value="{{ prod.price }}"placeholder="" required>
-                    
-                  </div>
-                  <div >
-                    <label for="quantity">Quantity</label>
-                    <input type="text" class="form-control" id="quantity" name="quantity" value="{{ prod.quantity }}"placeholder="" required>
-                    
-                  </div>
-                  <div>
+                    <div class="form-group">
+                       
+                        <label for="image">Image</label>
+                        <div class="card-img-top">
+                            {% if prod.image%}
+                            <img src="{{ prod.image.url }}" class="card-img" alt="Image" style="max-width: 200px; max-height: 200px;">
+                            {%endif%}
+                        </div>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                       
+                    </div>
                    
                     
-                    <label for="image">Image</label>
-                    <div class="card-img-top">
-                      <img src="{{ prod.image1.url }}" class="card-img" alt="Image 1" style="max-width: 200px; max-height: 200px;">
+                    <div class="form-group">
+                        <label for="image">Image1</label>
+                        {% if prod.image1%}
+                        <img src="{{ prod.image1.url }}" class="card-img" alt="Image1" style="max-width: 200px; max-height: 200px;">
+                        {%endif%}
+                        <input type="file" class="form-control" id="image1" name="image1" accept="image/*">
                     </div>
                     
-                    <input type="file" class="form-control" id="image1" name="image1" accept="image/*" >
-                  </div>
-                  <div>
-                    <label for="image">Image</label>
-                    <img src="{{ prod.image2.url }}" class="card-img" alt="Image 1" style="max-width: 200px; max-height: 200px;">
-                    <input type="file" class="form-control" id="image2" name="image2" accept="image/*" >
-                  </div>
-                  <div>
-                    <div>
-                      <label for="image3">Image</label>
-                      <div class="card-img-top">
-                        <img src="{{ prod.image3.url }}" class="card-img" alt="Image 1" style="max-width: 200px; max-height: 200px;">
-                      </div>
-                      <input type="file" class="form-control mt-3" id="image3" name="image3" accept="image/*">
-                      
                     
-                    
-                  </div>
-                  
-                  <div>
-                    <label for="description">description</label>
-                    <input type="text" class="form-control" id="description" name="description" value="{{ prod.description }}"placeholder="" required>
-                    
-                  </div>
-                  <div>
-                  {% comment %} <label for="catogery">catogery</label> 
-                    <input type="text" class="form-control" id="catogery" name="catogery" value="{{ prod.catogery.name }}" placeholder="" required>  {% endcomment %} 
-                    <label for="category">Category</label>
-<select class="form-control" id="category" name="category" >
-  <option value="{{ prod.category.name }}">{{ prod.category.name }}</option>
-  <option value="flagship">Flagship</option>
-  <option value="midrange">Midrange</option>
-</select>
+                    <div class="form-group">
+                        <label for="image">Image2</label>
+                        {% if prod.image2%}
+                        <div class="card-img-top">
+                            <img src="{{ prod.image2.url }}" class="card-img" alt="Image2" style="max-width: 200px; max-height: 200px;">
+                        </div>
+                        {%endif%}
+                        <input type="file" class="form-control mt-3" id="image2" name="image2" accept="image/*">
+                       
+                    </div>
+                   
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select class="form-control" id="category" name="category">
+                            {% for c in pro %}
+                            <option value="{{ c.catogery.name }}">{{ c.catogery.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="gap-2  justify-content-center align-items-center d-flex">
+                      <button type="submit" class="btn btn-primary my-2"> Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -109,9 +118,7 @@
                    
                     
                   </div>
-                  <div class="gap-2  justify-content-center align-items-center d-flex">
-                    <button type="submit" class="btn btn-primary my-2"> Update</button>
-                  </div>
+                  
                 </form>
               </div>
             </div>

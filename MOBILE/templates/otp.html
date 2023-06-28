@@ -1,24 +1,79 @@
-<!-- otp.html -->
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTP Verification</title>
+    <style>
+        /* Custom styles for the form */
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #loader {
+            border: 4px solid #f3f3f3; /* Light gray */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        #submit-btn {
+            padding: 10px 20px;
+            background-color: #3498db; /* Blue */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Animation for the loading spinner */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
     <h1>OTP Verification</h1>
-    
+
     {% if msg %}
         <p>{{ msg }}</p>
     {% endif %}
-    
-    <form method="POST" action="{% url 'verify_otp' otp as otp %}" enctype="multipart/form-data">
+
+    <form method="POST" action="{% url 'verify_otp' otp as otp %}" enctype="multipart/form-data" id="otp-form">
         {% csrf_token %}
         
         <label for="otp">Enter OTP:</label>
         <input type="text" id="otp" name="otp" required>
         
-        <input type="submit" value="Verify OTP">
+        <div id="loader" style="display: none;"></div> <!-- Loading spinner -->
+        
+        <input type="submit" value="Verify OTP" id="submit-btn">
     </form>
+
+    <script>
+        // Function to show the loading spinner when the form is submitted
+        function showLoader() {
+            document.getElementById('loader').style.display = 'inline-block';
+            document.getElementById('submit-btn').style.display = 'none';
+        }
+
+        // Attach the showLoader function to the form's submit event
+        document.getElementById('otp-form').addEventListener('submit', showLoader);
+    </script>
 </body>
 </html>

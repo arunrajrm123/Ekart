@@ -67,34 +67,65 @@
 
             <ul class="nav">
                 
-               
               <li>
-								<a href="{% url 'shop'%}">Shop</a>
-							</li>
-
-							<li class="label1" data-label1="hot">
-								<a href="{% url 'orders'%}">orders</a>
-							</li>
-
-							<li>
-								<a href="{% url 'deli'%}">delivered_products</a>
-							</li>
-
-							
-							<li>
-								<a href="{% url 'wish'%}">Wishlist</a>
-							</li>
-							
-
-							<li>
-								<a href="{% url 'ret'%}">returned_products</a>
-							</li>
-							<li>
-               
-                
-                
-				 <li><a href="/admin_logout" class="btn btn-outline-success">Logout</a></li> 
-            </ul>
+                <a href="{% url 'admin_home' %}">
+                    <i class="ti-user"></i>
+                    <p>Dashboard</p>
+                </a>
+            </li>
+              <li>
+                  <a href="{% url 'userlist' %}">
+                      <i class="ti-user"></i>
+                      <p>User Details</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'viewcatogery' %}">
+                      <i class="ti-text"></i>
+                      <p>Category Details</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'viewvariant' %}">
+                      <i class="ti-text"></i>
+                      <p>variant Details</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'view_orders' %}">
+                      <i class="ti-text"></i>
+                      <p>Order Details</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'productview' %}">
+                      <i class="ti-pencil-alt2"></i>
+                      <p>Product Details</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'view_coupon' %}">
+                      <i class="ti-view-list-alt"></i>
+                      <p>Coupon Details</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'v_deli' %}">
+                      <i class="ti-view-list-alt"></i>
+                      <p>delivered product</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'v_retu' %}">
+                      <i class="ti-view-list-alt"></i>
+                      <p>retunred product</p>
+                  </a>
+              </li>
+             
+              
+              
+       <li><a href="/admin_logout" class="btn btn-outline-success">Logout</a></li> 
+          </ul>
     	</div>
     </div>
 
@@ -145,17 +176,22 @@
             </div>
         </nav>
 
+        <form class="d-flex" method="GET">
+          {% csrf_token %}
+          <input class="form-control me-2 container" type="text" name="search" placeholder="Search product" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
 
-        <h1>View Orders</h1>
-        {% if orders %}
+       
+        {% if page_obj %}
         <div class="content">
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-12">
                 <div class="card">
                   <div class="header">
-                    <h4 class="title">User Listing</h4>
-                    <p class="category">All details of users</p>
+                    <h4 class="title">orders</h4>
+                    
                   </div>
                   <div class="content table-responsive table-full-width">
                     <table class="table table-striped">
@@ -163,6 +199,7 @@
                         <tr style="width: 200px;">
                           <th style="width: 200px;">Order ID</th>
                           <th style="width: 200px;">User</th>
+                          <th style="width: 200px;">address</th>
                           <th style="width: 200px;">Order Date and Time</th>
                           <th style="width: 200px;">Total  Amount </th>
                           <th style="width: 200px;">Total Quantity</th>
@@ -172,15 +209,16 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% for order in orders %}
+                        {% for order in page_obj %}
   <tr>
     <td style="width: 200px;">{{ order.id }}</td>
     <td style="width: 200px;">{{ order.user_id.name }}</td>
+    <td style="width: 200px;">{{ order.address.state}}</td>
     <td style="width: 200px;">{{ order.order_date }}</td>
     <td style="width: 200px;">{{ order.total_amount }}</td>
     <td style="width: 200px;">{{ order.total_quantity }}</td>
     <td style="width: 200px;">{{ order.status }}</td>
-    <td style="width: 200px;">{{ order.product.name }}</td>
+    <td style="width: 200px;"><img src="{{ order.varient_Key.image.url }}" alt="Image 1" style="width: 50px; height: 50px;">{{ order.varient_Key.product_key.name }}</td>
     <td style="width: 200px;">{{ order.payment_method }}</td>
     <td>
       {% if not order.is_cancelled %}
@@ -204,8 +242,38 @@
   </tr>
 {% endfor %}
 
+
+
                       </tbody>
                     </table>
+                    <footer class="footer">
+                      <div class="container-fluid justify-content:center;">
+                          <nav class="pull-left">
+                             <!-- Pagination links -->
+            <div class="pagination">
+              {% if page_obj.has_previous %}
+                  <a href="?page=1">First</a>
+                  <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+              {% endif %}
+            
+              {% for num in page_obj.paginator.page_range %}
+                  {% if page_obj.number == num %}
+                      <span class="current-page">{{ num }}</span>
+                  {% else %}
+                      <a href="?page={{ num }}">{{ num }}</a>
+                  {% endif %}
+              {% endfor %}
+            
+              {% if page_obj.has_next %}
+                  <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                  <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+              {% endif %}
+            </div>
+            
+                          
+                      </div>
+                  </footer>
+            
                     {% else %}
                     <p>No orders found.</p>
                     {% endif %}
@@ -216,34 +284,7 @@
           </div>
         </div>
         
-        <footer class="footer">
-            <div class="container-fluid">
-                <nav class="pull-left">
-                    <ul>
-
-                        <li>
-                            <a href="http://www.creative-tim.com">
-                                Creative Tim
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://blog.creative-tim.com">
-                               Blog
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://www.creative-tim.com/license">
-                                Licenses
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-				<div class="copyright pull-right">
-                    &copy; <script>document.write(new Date().getFullYear())</script>, made with <i class="fa fa-heart heart"></i> by <a href="http://www.creative-tim.com">Creative Tim</a>
-                </div>
-            </div>
-        </footer>
-
+       
 
     </div>
 </div>

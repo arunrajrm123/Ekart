@@ -121,12 +121,8 @@
 					<div class="menu-desktop">
 						<ul class="main-menu">
 							<li class="active-menu">
-								<a href="index.html">Home</a>
-								<ul class="sub-menu">
-									<li><a href="index.html">Homepage 1</a></li>
-									<li><a href="home-02.html">Homepage 2</a></li>
-									<li><a href="home-03.html">Homepage 3</a></li>
-								</ul>
+								<a href="{% url 'home'%}">Home</a>
+								
 							</li>
 
 							<li>
@@ -142,14 +138,15 @@
 							</li>
 
 							
+							<li>
+								<a href="{% url 'wish'%}">Wishlist</a>
+							</li>
 							
 
 							<li>
-								<a href="">returned_products</a>
+								<a href="{% url 'ret'%}">returned_products</a>
 							</li>
-							<li>
-								<a href="contact.html">Contact</a>
-							</li>
+							
 						</ul>
                         <li class="nav-item">
                             <a class="btn btn-outline-success" href="/user_logout" style="margin-left: 80px; font-weight: bold; font-size: 20px;" >Logout</a>
@@ -358,10 +355,10 @@
           <td>{{ order.user_id.name }}</td>
           <td>{{ order.user_id.email }}</td>
           <td>{{ order.user_id.phone_number }}</td>
-          <td>{{ order.product.name }}</td>
-          <td><div class="how-itemcart1" style="height: 50px; width: 50px;"><img src="{{ order.product.image1.url }}" alt="Product Image"></div></td>
+          <td>{{ order.varient_Key.product_key.name }}</td>
+          <td><div class="how-itemcart1" style="height: 50px; width: 50px;"><img src="{{ order.varient_Key.image.url }}" alt="Product Image"></div></td>
          
-          <td>{{ order.product.catogery }}</td>
+          <td>{{ order.varient_Key.product_key.catogery }}</td>
           <td>{{ order.order_date }}</td>
           <td>{{ order.total_quantity }}</td>
           <td>{{ order.total_amount }}</td>
@@ -374,8 +371,6 @@
     <p>No returned product</p>
     {% endif %}
   </div>
-  
-
 	<!-- Footer -->
     <br>
     <br>

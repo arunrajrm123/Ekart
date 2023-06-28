@@ -67,29 +67,61 @@
 
             <ul class="nav">
                 
+                <li>
+                    <a href="{% url 'admin_home' %}">
+                        <i class="ti-user"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'userlist' %}">
+                        <i class="ti-user"></i>
+                        <p>User Details</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'viewcatogery' %}">
+                        <i class="ti-text"></i>
+                        <p>Category Details</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'viewvariant' %}">
+                        <i class="ti-text"></i>
+                        <p>variant Details</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'view_orders' %}">
+                        <i class="ti-text"></i>
+                        <p>Order Details</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'productview' %}">
+                        <i class="ti-pencil-alt2"></i>
+                        <p>Product Details</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'view_coupon' %}">
+                        <i class="ti-view-list-alt"></i>
+                        <p>Coupon Details</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'v_deli' %}">
+                        <i class="ti-view-list-alt"></i>
+                        <p>delivered product</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'v_retu' %}">
+                        <i class="ti-view-list-alt"></i>
+                        <p>retunred product</p>
+                    </a>
+                </li>
                
-                <li>
-                    <a href="{% url 'shop'%}">Shop</a>
-                </li>
-
-                <li class="label1" data-label1="hot">
-                    <a href="{% url 'orders'%}">orders</a>
-                </li>
-
-                <li>
-                    <a href="{% url 'deli'%}">delivered_products</a>
-                </li>
-
-                
-                <li>
-                    <a href="{% url 'wish'%}">Wishlist</a>
-                </li>
-                
-
-                <li>
-                    <a href="{% url 'ret'%}">returned_products</a>
-                </li>
-                <li>
                 
                 
 				 <li><a href="/admin_logout" class="btn btn-outline-success">Logout</a></li> 
@@ -161,22 +193,25 @@
                       <thead>
                         <tr style="width: 200px;">
                           <th style="width: 200px;">Order ID</th>
+                          <th style="width: 200px;">product</th>
                           <th style="width: 200px;">User</th>
                           <th style="width: 200px;">Order Date and Time</th>
                           <th style="width: 200px;">Total  Amount </th>
                           <th style="width: 200px;">Total Quantity</th>
-                          <th style="width: 200px;">Action</th>
                           
                         </tr>
                       </thead>
                       <tbody>
                         {% for i in ret %}
                           <tr>
-                            <td>{{i.product.name }}</td>
+                            <td>{{i.id }}</td>
+                             <td><img src="{{ i.varient_Key.image.url }}" alt="Image 1" style="width: 50px; height: 50px;">{{i.varient_Key.product_key.name }}</td>
+                <td>{{i.user_id.name }}</td>
+                <td>{{ i.order_date }}</td>
                 <td>{{i.total_amount }}</td>
                 <td>{{i.total_quantity }}</td>
-                <td>{{ i.order_date }}</td>
-                <td>{{i.product.delivery_date }}</td>
+                
+                
                 
                           </tr>
                         {% endfor %}

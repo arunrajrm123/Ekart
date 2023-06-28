@@ -38,50 +38,51 @@
         
         <!-- Logo desktop -->		
         <a href="#" class="logo">
-          <img src="../static/assets/images/icons/logo-01.png" alt="IMG-LOGO">
+        <img src="{% static '/assets/images/icons/logo-01.png' %}" alt="I-LOGO">
         </a>
 
         <!-- Menu desktop -->
         <div class="menu-desktop">
           <ul class="main-menu">
-            <li>
-              <a href="{% url 'home' %}">Home</a>
+            <li class="active-menu">
+              <a style="text-decoration: none;" href="{% url 'home'%}">Home</a>
               
             </li>
 
-            <li class="active-menu">
-              <a href="product.html">Shop</a>
+            <li>
+              <a style="text-decoration: none;" href="{% url 'shop'%}">Shop</a>
             </li>
 
             <li class="label1" data-label1="hot">
-              <a href="shoping-cart.html">Features</a>
+              <a style="text-decoration: none;" href="{% url 'orders'%}">orders</a>
             </li>
 
             <li>
-              <a href="blog.html">Blog</a>
+              <a style="text-decoration: none;" href="{% url 'deli'%}">delivered_products</a>
             </li>
 
+            
             <li>
-              <a href="about.html">About</a>
+              <a style="text-decoration: none;" href="{% url 'wish'%}">Wishlist</a>
             </li>
+            
 
             <li>
-              <a href="contact.html">Contact</a>
+              <a style="text-decoration: none;" href="{% url 'ret'%}">returned_products</a>
             </li>
+            
           </ul>
         </div>	
 
         <!-- Icon header -->
         <div class="wrap-icon-header flex-w flex-r-m">
-          <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
-            <i class="zmdi zmdi-search"></i>
-          </div>
+						
 
-          <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="2">
+          <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-cart" >
             <i class="zmdi zmdi-shopping-cart"></i>
           </div>
 
-          <a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+          <a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 " >
             <i class="zmdi zmdi-favorite-outline"></i>
           </a>
         </div>
@@ -103,11 +104,11 @@
         <i class="zmdi zmdi-search"></i>
       </div>
 
-      <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="2">
-        <i class="zmdi zmdi-shopping-cart"></i>
+      <div href="{% url 'add_to_cart' %}"class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 js-show-cart" >
+        <i href="{% url 'add_to_cart' %}"class="zmdi zmdi-shopping-cart"><a href="{% url 'add_to_cart' %}"></a></i>
       </div>
 
-      <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
+      <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 " >
         <i class="zmdi zmdi-favorite-outline"></i>
       </a>
     </div>
@@ -119,7 +120,33 @@
       </span>
     </div>
   </div>
+  <div class="wrap-header-cart js-panel-cart">
+		<div class="s-full js-hide-cart" ></div>
 
+		<div class="header-cart flex-col-l p-l-65 p-r-25">
+			<div class="header-cart-title flex-w flex-sb-m p-b-8">
+				<span class="mtext-103 cl2">
+					Your Cart
+				</span>
+
+				<div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
+					<i class="zmdi zmdi-close"></i>
+				</div>
+			</div>
+			
+		
+
+					<div class="header-cart-buttons flex-w w-full">
+						<a href="{% url 'add_to_cart'%}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+							View Cart
+						</a>
+
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
   <!-- Menu Mobile -->
   <div class="menu-mobile">
@@ -202,26 +229,35 @@
 </header>
 
 <section class="py-5">
-  <div class="container">
-    {% for i in products %}
+  <div id="product-details" class="container">
+    {% if varient %}
     <div class="row gx-5">
       <aside class="col-lg-6">
+        {%if varient.image%}
         <div class="border rounded-4 mb-3 d-flex justify-content-center " style="max-width: 50%; max-height: 50vh; margin: auto">
-          <a  href="{{ i.image1.url }}" class="MagicZoom">
-            <img style="max-width: 80%; max-height: 80vh; margin: auto"  src="{{i.image1.url}}" />
+          <a  href="{{ varient.image.url }}" class="MagicZoom">
+            <img style="max-width: 80%; max-height: 80vh; margin: auto"  src="{{varient.image.url}}" />
           </a>
 
         </div>
+        {%endif%}
+        
         <div class="d-flex justify-content-center mb-3 py-3">
+          {%if varient.image%}
           <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="#" class="item-thumb">
-            <img width="60" height="60" class="rounded-2" src="{{i.image1.url}}" />
+            <img width="60" height="60" class="rounded-2" src="{{ varient.image.url}}" />
           </a>
+          {%endif%}
+          {%if varient.image1%}
           <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="#" class="item-thumb">
-            <img width="60" height="60" class="rounded-2" src="{{i.image2.url}}" />
+            <img width="60" height="60" class="rounded-2" src="{{ varient.image1.url}}" />
           </a>
+          {%endif%}
+          {%if varient.image2%}
           <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="#">
-            <img width="60" height="60" class="rounded-2" src="{{i.image3.url}}" />
+            <img width="60" height="60" class="rounded-2" src="{{ varient.image2.url}}" />
           </a>
+          {%endif%}
 
         </div>
         <!-- thumbs-wrap.// -->
@@ -230,7 +266,7 @@
       <main class="col-lg-6">
         <div class="ps-lg-3">
           <h4 class="text-dark js-name-detail">
-            {{i.name}}
+            {{ varient.product_key.name}}
             <span class="text-success ms-2">
               {% if qu > 0 %}
               <p class="stock" style="color:Green;display:inline;">(In stock)</p>
@@ -242,11 +278,7 @@
           
           <div class="d-flex flex-row my-3">
             <div class="text-warning mb-1 me-2">
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
+            COLOR- {{varient.varient_name}}
               
             </div>
             
@@ -255,12 +287,17 @@
           </div>
 
           <div class="mb-3">
-            <span class="h5"style="font-weight: bold; font-size: 25px; ">{{i.price}}</span>
+            {%if not varient.catogery_offer_price%}
+            <span class="h5"style="font-weight: bold; font-size: 25px;">{{varient.price}}</span>
             <span class="text-muted">/per box</span>
+            {%endif%}
+            {%if varient.catogery_offer_price%}
+            <span class="h5"style="font-weight: bold; font-size: 25px; ">{{ varient.catogery_offer_price}}</span>
+            <span class="text-muted">/per box</span>
+            {%endif%}
           </div>
-
           <p>
-            {{i.description}}
+            {{ varient.product_key.description}}
           </p>
 
 
@@ -268,7 +305,7 @@
 
 
           </div>
-          {% comment %} <form method="POST" action="">
+          {% comment %} duct<form method="POST" action="">
               {% csrf_token %}
               
               <div class="d-flex">
@@ -282,20 +319,33 @@
             <div style="display: flex; gap: 10px;">
               <form method="POST" action="" style="display: inline;">
                 {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ i.product_id }}">
-                <button type="submit" name="action" class="btn btn-success" onclick="showPopup()">Add to Cart</button>
+                <input type="hidden" name="varient_id" value="{{ varient.id }}">
+                <button type="submit" name="action"  value="add_to_cart" class="btn btn-success" onclick="showPopup()">Add to Cart</button>
               </form>
             
-              <form method="POST" action="/checkout/" style="display: inline;">
+              <form method="POST" action="/check/" style="display: inline;">
                 {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ i.product_id }}">
-                <input type="hidden" name="quantity" value="{{ i.quantity }}">
+                <input type="hidden" name="product_id" value="{{ variant.id }}">
+                <input type="hidden" name="quantity" value="{{variant.quantity }}">
                 <button type="submit" name="action" class="btn btn-success" onclick="showPopup()">Buy Now</button>
               </form>
             </div>
-            
-        
+            <form method="post" action="/variantselection/">
+              {% csrf_token %}
+              
+              <!-- Display product details here -->
+              <label for="variant-select">Select Variant:</label>
+              <select name="variant_id">
+                  {% for variant in all_variants %}
+                  <option value="{{ variant.id }}">{{ variant.varient_name }}</option>
+                  {% endfor %}
+              </select>
+              
+              <input type="hidden" name="action" value="selection">
+              <input type="submit" value="Select">
+          </form>
           
+         
           {% if message%}
           <div class="message">
             <p>{{ message }}</p>
@@ -304,7 +354,7 @@
           </main>
         </div>
       </div>
-      {% endfor %}
+      {% endif%}
     </section>
   </div>
 </section>
@@ -458,5 +508,27 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 {% endblock content %}
 {% block script %} <script  src="{% static 'assets/magiczoom/magiczoom.js' %}">
   // Place your JavaScript code here
- 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+      
+          $('.choose-varient').change(function() {
+              var variantId = $(this).val();
+              $.ajax({
+                  url: '/get_variant_details/',
+                  type: 'GET',
+                  data: { 
+                    variant_id: variantId 
+                  },
+                  success: function(response) {
+                      // Update the product details section with the retrieved variant details
+                      $('#product-details').html(response.data);
+                  },
+                  error: function(xhr) {
+                      // Handle error
+                  }
+              });
+          });
+      
+  </script>
+  
   </script>{% endblock script %}

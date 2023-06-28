@@ -120,12 +120,8 @@
 					<div class="menu-desktop">
 						<ul class="main-menu">
 							<li class="active-menu">
-								<a href="index.html">Home</a>
-								<ul class="sub-menu">
-									<li><a href="index.html">Homepage 1</a></li>
-									<li><a href="home-02.html">Homepage 2</a></li>
-									<li><a href="home-03.html">Homepage 3</a></li>
-								</ul>
+								<a href="{% url 'home'%}">Home</a>
+								
 							</li>
 
 							<li>
@@ -141,14 +137,15 @@
 							</li>
 
 							
+							<li>
+								<a href="{% url 'wish'%}">Wishlist</a>
+							</li>
 							
 
 							<li>
-								<a href="">returned_products</a>
+								<a href="{% url 'ret'%}">returned_products</a>
 							</li>
-							<li>
-								<a href="contact.html">Contact</a>
-							</li>
+							
 						</ul>
                         <li class="nav-item">
                             <a class="btn btn-outline-success" href="/user_logout" style="margin-left: 80px; font-weight: bold; font-size: 20px;" >Logout</a>
@@ -358,19 +355,19 @@
             <tbody>
                 {% for item in wish_items %}
                 <tr>
-                    <td>{{ item.wish_product.name }}</td>
+                    <td>{{ item.wish_product.product_key.name }}</td>
                     <td><img src="{{ item.wish_product.image1.url }}" alt="Image 1" style="width:100px; height:100px;"></td>
                     <td>{{ item.wish_product.price }}</td>
                    
                     <td>1</td>
                     
-                    <td>{{ item.wish_product.description }}</td>
+                    <td>{{ item.wish_product.product_key.description }}</td>
                     
                    
                     <td>
                         <form method="post" action="{% url 'w_add' %}">
                             {% csrf_token %}
-                            <input type="hidden" name="prod" value="{{ item.wish_product.product_id }}">
+                            <input type="hidden" name="prod" value="{{ item.wish_product.id}}">
                             <button type="submit" class="btn btn-primary">Add to Cart</button>
                         </form>
                         

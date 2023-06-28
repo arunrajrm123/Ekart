@@ -116,6 +116,12 @@
     }
 
 </style>
+<style>
+	.wrap-menu-desktop {
+		display: inline-block;
+	  justify-content: center;
+	}
+  </style>
 <!--===============================================================================================-->
 </head>
 <body class="animsition">
@@ -127,107 +133,70 @@
 			<!-- Topbar -->
 			<div class="top-bar">
 				<div class="content-topbar flex-sb-m h-full container">
-					<div class="left-top-bar">
-						Free shipping for standard order over $100
-					</div>
-
-					<div class="right-top-bar flex-w h-full">
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							Help & FAQs
-						</a>
-
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							My Account
-						</a>
-
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							EN
-						</a>
-
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							USD
-						</a>
-					</div>
+					
 				</div>
 			</div>
 
 			<div class="wrap-menu-desktop how-shadow1">
 				<nav class="limiter-menu-desktop container">
-					
-					<!-- Logo desktop -->		
-					<a href="#" class="logo">
-						<img src="../static/assets/images/icons/logo-01.png" alt="IMG-LOGO">
-					</a>
-
-					<!-- Menu desktop -->
-					<div class="menu-desktop">
+				  <!-- Logo desktop -->
+				  <!-- Menu desktop -->
+				 
+				  
+				  <div class="wrap-menu-desktop how-shadow1">
+					<nav class="limiter-menu-desktop container">
+					  <!-- Logo desktop -->
+					  <div class="menu-desktop">
 						<ul class="main-menu">
-							<li>
-								<a href="{% url 'home' %}">Home</a>
+							<li class="active-menu">
+								<a style="text-decoration: none;" href="{% url 'home'%}">Home</a>
 								
 							</li>
 
-							<li class="active-menu">
-								<a href="product.html">Shop</a>
+							<li>
+								<a style="text-decoration: none;" href="{% url 'shop'%}">Shop</a>
 							</li>
 
 							<li class="label1" data-label1="hot">
-								<a href="shoping-cart.html">Features</a>
+								<a style="text-decoration: none;" href="{% url 'orders'%}">orders</a>
 							</li>
 
 							<li>
-								<a href="blog.html">Blog</a>
+								<a style="text-decoration: none;" href="{% url 'deli'%}">delivered_products</a>
 							</li>
 
+							
 							<li>
-								<a href="about.html">About</a>
-							</li>
-
-							<li>
-								<a href="contact.html">Contact</a>
+								<a style="text-decoration: none;" href="{% url 'wish'%}">Wishlist</a>
 							</li>
 							
-							<form method="GET" action="{% url 'shop' %}">
-								<label for="name">Category:</label>
-								<select name="name" id="name">
-								  <option value="">All</option>
-								  <option value="Wired" {% if selected_category == 'Wired' %}selected{% endif %}>Wired</option>
-								  <option value="Unwired" {% if selected_category == 'Unwired' %}selected{% endif %}>Unwired</option>
-								  <!-- Add more category options as needed -->
-								</select>
-							  
-								<label for="price_range">Price Range:</label>
-								<select name="price_range" id="price_range">
-								  <option value="">All</option>
-								  <option value="100-2000" {% if selected_price_range == '100-2000' %}selected{% endif %}>100-2000</option>
-								  <option value="2001-5000" {% if selected_price_range == '2001-5000' %}selected{% endif %}>2001-5000</option>
-								  <!-- Add more price range options as needed -->
-								</select>
-							  
-								<button type="submit" style="background-color: #4CAF50; color: white; padding: 5px 5px; border: none; cursor: pointer; border-radius: 4px;">Filter</button>
 
-							  </form>
+							<li>
+								<a style="text-decoration: none;" href="{% url 'ret'%}">returned_products</a>
+							</li>
 							
-
 						</ul>
-					</div>	
+                        <li class="nav-item">
+                            <a class="btn btn-outline-danger" href="/user_logout" style="margin-left: 80px;color:red; font-weight: bold; font-size: 20px;" >Logout</a>
+                        </li> 
 
-					<!-- Icon header -->
-					<div class="wrap-icon-header flex-w flex-r-m">
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
-							<i class="zmdi zmdi-search"></i>
-						</div>
-
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="2">
-							<i class="zmdi zmdi-shopping-cart"></i>
-						</div>
-
-						<a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
-							<i class="zmdi zmdi-favorite-outline"></i>
-						</a>
 					</div>
-				</nav>
-			</div>	
+				  
+					 
+					  <!-- Icon header -->
+					  <div class="wrap-icon-header flex-w flex-r-m">
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11  js-show-cart">
+						  <i style="color:white;" class="zmdi zmdi-shopping-cart"></i>
+						</div>
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-profile">
+						  <i style="color:white;" class="zmdi zmdi-account-circle profile-icon"></i>
+						</div>
+					  </div>
+					  <!-- Icon header -->
+					</nav>
+				  </div>
+				  
+			  
 		</div>
 
 		<!-- Header Mobile -->
@@ -244,11 +213,11 @@
 					<i class="zmdi zmdi-search"></i>
 				</div>
 
-				<div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="2">
-					<i class="zmdi zmdi-shopping-cart"></i>
+				<div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" >
+					<a href="{% url 'add_to_cart'%}" ><i class="zmdi zmdi-shopping-cart"></i></a>
 				</div>
 
-				<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
+				<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" >
 					<i class="zmdi zmdi-favorite-outline"></i>
 				</a>
 			</div>
@@ -263,67 +232,61 @@
 
 
 		<!-- Menu Mobile -->
-		<div class="menu-mobile">
-			<ul class="topbar-mobile">
-				<li>
-					<div class="left-top-bar">
-						Free shipping for standard order over $100
+		<div class="wrap-menu-desktop how-shadow1">
+				<nav class="limiter-menu-desktop container">
+					
+					<!-- Logo desktop -->		
+					<a href="#" class="logo">
+						<img src="../static/assets/images/icons/logo-01.png" alt="LLLogo">
+					</a>
+
+					<div class="menu-desktop">
+						<ul class="main-menu">
+							<li class="active-menu">
+								<a style="text-decoration: none;" href="{% url 'home'%}">Home</a>
+								
+							</li>
+
+							<li>
+								<a style="text-decoration: none;" href="{% url 'shop'%}">Shop</a>
+							</li>
+
+							<li class="label1" data-label1="hot">
+								<a style="text-decoration: none;" href="{% url 'orders'%}">orders</a>
+							</li>
+
+							<li>
+								<a style="text-decoration: none;" href="{% url 'deli'%}">delivered_products</a>
+							</li>
+
+							
+							<li>
+								<a style="text-decoration: none;" href="{% url 'wish'%}">Wishlist</a>
+							</li>
+							
+
+							<li>
+								<a style="text-decoration: none;" href="{% url 'ret'%}">returned_products</a>
+							</li>
+							
+						</ul>
+                        
+					</div>	
+
+					<!-- Icon header -->
+					<div class="wrap-icon-header flex-w flex-r-m">
+						
+
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-cart" >
+							<i class="zmdi zmdi-shopping-cart"></i>
+						</div>
+
+						<a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 " >
+							<i class="zmdi zmdi-favorite-outline"></i>
+						</a>
 					</div>
-				</li>
-
-				<li>
-					<div class="right-top-bar flex-w h-full">
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							Help & FAQs
-						</a>
-
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							My Account
-						</a>
-
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							EN
-						</a>
-
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							USD
-						</a>
-					</div>
-				</li>
-			</ul>
-
-			<ul class="main-menu-m">
-				<li>
-					<a href={% url 'home' %}>Home</a>
-					<ul class="sub-menu-m">
-						<li><a href="index.html">Homepage 1</a></li>
-						<li><a href="home-02.html">Homepage 2</a></li>
-						<li><a href="home-03.html">Homepage 3</a></li>
-					</ul>
-					<span class="arrow-main-menu-m">
-						<i class="fa fa-angle-right" aria-hidden="true"></i>
-					</span>
-				</li>
-
-				
-
-				<li>
-					<a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Features</a>
-				</li>
-
-				<li>
-					<a href="blog.html">Blog</a>
-				</li>
-
-				<li>
-					<a href="about.html">About</a>
-				</li>
-
-				<li>
-					<a href="contact.html">Contact</a>
-				</li>
-			</ul>
-		</div>
+				</nav>
+			</div>
 
 		<!-- Modal Search -->
 		<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
@@ -394,17 +357,42 @@
 				<!-- Filter -->
 				
 			</div>
+			
+
 
 			<div class="row isotope-grid">
-				{% for item in products  %}
-				
+				<div style="position: fixed; top: 0; right: 0;">
+					<li style="display: inline-block; padding: 10px; white-space: nowrap;">
+					  <form method="GET" action="{% url 'shop' %}">
+						<label style="color:white;" for="name">Category:</label>
+						<select name="name" id="name">
+						  <option value="">All</option>
+						  <option  value="Wired" {% if selected_category == 'Wired' %}selected{% endif %}>Wired</option>
+						  <option value="Unwired" {% if selected_category == 'Unwired' %}selected{% endif %}>Unwired</option>
+						  <!-- Add more category options as needed -->
+						</select>
+						<label style="color:white;" for="price_range">Price Range:</label>
+						<select name="price_range" id="price_range">
+						  <option value="">All</option>
+						  <option value="100-1500" {% if selected_price_range == '100-1500' %}selected{% endif %}>100-1500</option>
+						  <option value="1501-5000" {% if selected_price_range == '1501-5000' %}selected{% endif %}>1501-5000</option>
+						  <!-- Add more price range options as needed -->
+						</select>
+						<button type="submit" style="background-color: #4CAF50; color: white; padding: 5px 10px; border: none; cursor: pointer; border-radius: 4px;">Filter</button>
+					  </form>
+					</li>
+				  </div>
+				  
+				{% if l  %}
+				{% for item in l %}
 				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
 					<!-- Block2 -->
 					<div class="block2">
+						{% if item.image%}
 						<div class="block2-pic hov-img0">
 							
 							
-							<img src="{{ item.image1.url }}" alt="{{ item.name }} image" class="image-zoom-container" style="height: 200px; width: 200px;">
+							<img src="{{ item.image.url }}" alt="{{ item.product_key.name }} image" class="image-zoom-container" style="height: 200px; width: 200px;">
 
 							
 
@@ -414,65 +402,39 @@
 							
 						
 						</div>
+						{% endif%}
 
 						<div class="block2-txt flex-w flex-t p-t-14">
 							<div class="block2-txt-child1 flex-col-l ">
-								<a href="{% url 'productdetail' item.product_id %}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" style="font-size: 20px;">
-									{{item.name}}
+								<a href="{% url 'productdetail' product_id=item.id %}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" style="font-size: 20px;">
+									{{item.product_key.name}}
 								</a>
-
-								<span class="stext-105 cl3" style="font-size: 20px;">
-									{{item.price}}
+                                <span class="stext-105 cl3" style="font-size: 20px; color:green">
+									{{item.varient_name}},{{item.product_key.catogery}}
 								</span>
-								{% comment %} <a href={% url 'buynow' item.id %}>
-									Buy it
-								</a> {% endcomment %}
+								{%if item.catogery_offer_price%}
+								<span class="stext-105 cl3" style="font-size: 20px; font-weight:bold; text-decoration: line-through;">
+									Price-{{item.price}}
+								</span>
 								
-								{% comment %} <a href={% url 'productdetail' item.product_id %}> <button class="btn btn-info">Preview</button> </a> {% endcomment %}
-								
-								{% comment %} <button type="button" class="addit" data-toggle="modal" data-target="#myModal" data-category-id="{{ item.id }}">Add to Cart</button> {% endcomment %}
 
-									<!-- Modal -->
-									{% comment %} <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-										<div class="modal-header">
-											<h5 class="modal-title" id="modalLabel">Confirm?</h5>
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
-											</button>
-										</div>
-										<div class="modal-body">
-											<a id="modalLink" href="#">Yes</a>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-										</div>
-										</div>
-									</div>
-									</div> {% endcomment %}
-								  
-
-
-								
-								
-									
-								
+                                <span class="stext-105 cl3" style="font-size: 20px; font-weight:bold">
+									Offer price-{{item.catogery_offer_price}}
+								</span>
+								{%endif%}
+								{%if not item.catogery_offer_price%}
+                                <span class="stext-105 cl3" style="font-size: 20px; font-weight:bold">
+									Price-{{item.price}}
+								</span>
+								{%endif%}
+								</span>
+								<span class="stext-105 cl3" style="font-size: 20px;">
+								</span>	
 							</div>
-							{% comment %} <form id="item-for" method="POST" action="">
-								{% csrf_token %}
-								<div class="block2-txt-child2 flex-r p-t-3">
-								  <input type="hidden" name="product_id" value="{{ item.product_id}}">
-								  <button type="submit" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-									<img class="icon-heart1 dis-block trans-04" src="../static/assets/images/icons/icon-heart-01.png" alt="ICON">
-									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="../static/assets/images/icons/icon-heart-02.png" alt="ICON">
-								  </button>
-								</div>
-							  </form>
-							   {% endcomment %}
+							
 							   <form method="POST" action="">
 								{% csrf_token %}
-								<input type="hidden" name="product_id" value="{{ item.product_id }}">
+								<input type="hidden" name="product_id" value="{{ item.id }}">
 								<button type="submit" class="heart-button">
 									<svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 										<path d="M12 21.35l-1.45-1.32C5.4 15.03 2 12.09 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C14.09 3.81 15.76 3 17.5 3 20.58 3 23 5.42 23 8.5c0 3.59-3.4 6.53-8.55 11.53L12 21.35z"/>
@@ -652,8 +614,9 @@
 				
 				
 				
-	
-			{% endfor %}
+				{% endfor %}
+			{% endif %}
+			
 
 				
 

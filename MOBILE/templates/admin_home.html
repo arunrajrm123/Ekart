@@ -67,9 +67,15 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{% url 'viewvariant' %}">
+                        <i class="ti-text"></i>
+                        <p>variant Details</p>
+                    </a>
+                </li>
+                <li>
                     <a href="{% url 'view_orders' %}">
                         <i class="ti-text"></i>
-                        <p>Order Details</p>
+                        <p>Order </p>
                     </a>
                 </li>
                 <li>
@@ -107,6 +113,15 @@
     <div class="main-panel">
         <nav class="navbar navbar-default">
             <div class="container-fluid">
+
+
+                
+
+
+
+
+
+
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle">
                         <span class="sr-only">Toggle navigation</span>
@@ -159,22 +174,27 @@
                         <div class="card">
                             <div class="content">
                                 <div class="row">
+                                    <h5 class="text-center">Download Invoice</h5>
                                     <div class="col-xs-5">
-                                        <div class="icon-big icon-warning text-center">
-                                            <i class="ti-server"></i>
-                                        </div>
+                                      <div class="icon-big icon-warning text-center">
+                                        <p>
+                                          <a href="{% url 'excel' %}" class="button" style="border: 1px solid #000; padding: 10px 20px; text-decoration: none; display: inline-block; background-color: #f1f1f1; color: #000; font-weight: bold; border-radius: 4px;">Excel</a>
+                                        </p>
+                                      </div>
                                     </div>
                                     <div class="col-xs-7">
-                                        <div class="numbers">
-                                            <p>Capacity</p>
-                                            105GB
-                                        </div>
+                                      <div class="numbers">
+                                        <p>
+                                          <a href="{% url 'venue_pdf' %}" class="button" style="border: 1px solid #000; padding: 10px 20px; text-decoration: none; display: inline-block; background-color: #f1f1f1; color: #000; font-weight: bold; border-radius: 4px;">PDF</a>
+                                        </p>
+                                      </div>
                                     </div>
-                                </div>
+                                  </div>
+                                  
                                 <div class="footer">
                                     <hr />
                                     <div class="stats">
-                                        <i class="ti-reload"></i> Updated now
+                                        <i class="ti-reload"></i> 
                                     </div>
                                 </div>
                             </div>
@@ -191,15 +211,17 @@
                                     </div>
                                     <div class="col-xs-7">
                                         <div class="numbers">
-                                            <p>Revenue</p>
-                                            $1,345
+                                           
+                                            <p>TOTAL ORDERS</p>
+                                            {{c}}
+                                           
                                         </div>
                                     </div>
                                 </div>
                                 <div class="footer">
                                     <hr />
                                     <div class="stats">
-                                        <i class="ti-calendar"></i> Last day
+                                        <i class="ti-calendar"></i> 
                                     </div>
                                 </div>
                             </div>
@@ -216,8 +238,8 @@
                                     </div>
                                     <div class="col-xs-7">
                                         <div class="numbers">
-                                            <p>Errors</p>
-                                            23
+                                            <p> REVANUE</p>
+                                           {{m}}
                                         </div>
                                     </div>
                                 </div>
@@ -241,8 +263,8 @@
                                     </div>
                                     <div class="col-xs-7">
                                         <div class="numbers">
-                                            <p>Followers</p>
-                                            +45
+                                            <p>RETURNED AND CANECLLED ORDERS</p>
+                                            {{l}}
                                         </div>
                                     </div>
                                 </div>
@@ -257,78 +279,130 @@
                     </div>
                 </div>
                 <div class="row">
-
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="card">
-                            <div class="header">
-                                <h4 class="title">Users Behavior</h4>
-                                <p class="category">24 Hours performance</p>
+                            <div style="width: 100%; height: 400px;">
+                                <canvas id="pieChart1" style="width: 100%; height: 100%;"></canvas>
                             </div>
-                            <div class="content">
-                                <div id="chartHours" class="ct-chart"></div>
-                                <div class="footer">
-                                    <div class="chart-legend">
-                                        <i class="fa fa-circle text-info"></i> Open
-                                        <i class="fa fa-circle text-danger"></i> Click
-                                        <i class="fa fa-circle text-warning"></i> Click Second Time
-                                    </div>
-                                    <hr>
-                                    <div class="stats">
-                                        <i class="ti-reload"></i> Updated 3 minutes ago
-                                    </div>
-                                </div>
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                            <script>
+                                const pieChart1Ctx = document.getElementById('pieChart1');
+                                new Chart(pieChart1Ctx, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: [{% for key, values in dq.items %} '{{key}}', {% endfor %}],
+                                        datasets: [{
+                                            label: ' Sales',
+                                            data: [{% for key, values in dq.items %} '{{values}}', {% endfor %}],
+                                            backgroundColor: [
+                                                'rgba(255, 99, 132, 0.6)',
+                                                'rgba(54, 162, 235, 0.6)',
+                                                'rgba(255, 206, 86, 0.6)',
+                                                'rgba(75, 192, 192, 0.6)',
+                                                'rgba(153, 102, 255, 0.6)',
+                                                'rgba(255, 159, 64, 0.6)',
+                                                'rgba(231, 233, 237, 0.6)'
+                                            ],
+                                            borderWidth: 1,
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                            y: {
+                                                beginAtZero: false
+                                            }
+                                        }
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div style="width: 100%; height: 400px;">
+                                <canvas id="pieChart2" style="width: 100%; height: 100%;"></canvas>
                             </div>
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                            <script>
+                                const pieChart2Ctx = document.getElementById('pieChart2');
+                                new Chart(pieChart2Ctx, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: [{% for key, values in mq.items %} '{{key}}', {% endfor %}],
+                                        datasets: [{
+                                            label: ' Sales',
+                                            data: [{% for key, values in mq.items %} '{{values}}', {% endfor %}],
+                                            backgroundColor: [
+                                                'rgba(255, 99, 132, 0.6)',
+                                                'rgba(54, 162, 235, 0.6)',
+                                                'rgba(255, 206, 86, 0.6)',
+                                                'rgba(75, 192, 192, 0.6)',
+                                                'rgba(153, 102, 255, 0.6)',
+                                                'rgba(255, 159, 64, 0.6)',
+                                                'rgba(231, 233, 237, 0.6)'
+                                            ],
+                                            borderWidth: 1,
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                            y: {
+                                                beginAtZero: false
+                                            }
+                                        }
+                                    }
+                                });
+                            </script>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="header">
-                                <h4 class="title">Email Statistics</h4>
-                                <p class="category">Last Campaign Performance</p>
-                            </div>
-                            <div class="content">
-                                <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
-
-                                <div class="footer">
-                                    <div class="chart-legend">
-                                        <i class="fa fa-circle text-info"></i> Open
-                                        <i class="fa fa-circle text-danger"></i> Bounce
-                                        <i class="fa fa-circle text-warning"></i> Unsubscribe
-                                    </div>
-                                    <hr>
-                                    <div class="stats">
-                                        <i class="ti-timer"></i> Campaign sent 2 days ago
-                                    </div>
-                                </div>
-                            </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div style="width: 100%; height: 400px;">
+                            <canvas id="pieChart3" style="width: 100%; height: 100%;"></canvas>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card ">
-                            <div class="header">
-                                <h4 class="title">2015 Sales</h4>
-                                <p class="category">All products including Taxes</p>
-                            </div>
-                            <div class="content">
-                                <div id="chartActivity" class="ct-chart"></div>
-
-                                <div class="footer">
-                                    <div class="chart-legend">
-                                        <i class="fa fa-circle text-info"></i> Tesla Model S
-                                        <i class="fa fa-circle text-warning"></i> BMW 5 Series
-                                    </div>
-                                    <hr>
-                                    <div class="stats">
-                                        <i class="ti-check"></i> Data information certified
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        <script>
+                            const pieChart3Ctx = document.getElementById('pieChart3');
+                            new Chart(pieChart3Ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: [{% for key, values in yq.items %} '{{key}}', {% endfor %}],
+                                    datasets: [{
+                                        label: ' Sales',
+                                        data: [{% for key, values in yq.items %} '{{values}}', {% endfor %}],
+                                        backgroundColor: [
+                                            'rgba(255, 99, 132, 0.6)',
+                                            'rgba(54, 162, 235, 0.6)',
+                                            'rgba(255, 206, 86, 0.6)',
+                                            'rgba(75, 192, 192, 0.6)',
+                                            'rgba(153, 102, 255, 0.6)',
+                                            'rgba(255, 159, 64, 0.6)',
+                                            'rgba(231, 233, 237, 0.6)'
+                                        ],
+                                        borderWidth: 1,
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: false
+                                        }
+                                    }
+                                }
+                            });
+                        </script>
                     </div>
                 </div>
             </div>
+                
+                
         </div>
 
 

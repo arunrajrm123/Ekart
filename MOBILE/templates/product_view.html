@@ -78,17 +78,23 @@
 
             <ul class="nav">
                 
+                
                 <li>
-                    <a href="{% url 'admin_home' %}">
-                        <i class="ti-panel"></i>
-                        <p>Dashboard</p>
+                    <a href="{% url 'userlist' %}">
+                        <i class="ti-user"></i>
+                        <p>User Details</p>
                     </a>
                 </li>
-               
                 <li>
                     <a href="{% url 'viewcatogery' %}">
                         <i class="ti-text"></i>
                         <p>Category Details</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'viewvariant' %}">
+                        <i class="ti-text"></i>
+                        <p>variant Details</p>
                     </a>
                 </li>
                 <li>
@@ -107,6 +113,18 @@
                     <a href="{% url 'view_coupon' %}">
                         <i class="ti-view-list-alt"></i>
                         <p>Coupon Details</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'v_deli' %}">
+                        <i class="ti-view-list-alt"></i>
+                        <p>delivered product</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'v_retu' %}">
+                        <i class="ti-view-list-alt"></i>
+                        <p>retunred product</p>
                     </a>
                 </li>
                
@@ -164,7 +182,7 @@
             </div>
         </nav>
     
-        <form class="d-flex" method="GET">
+     <form class="d-flex" method="GET">
             {% csrf_token %}
             <input class="form-control me-2 container" type="text" name="search" placeholder="Search product" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
@@ -178,71 +196,75 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="header">
-                                <h4 class="title">User Listing</h4>
-                                <p class="category">All detials of users</p>
+                                <h4 class="title">Product Listing</h4>
+                                <p class="category">All detials products</p>
                             </div>
                             <div class="content table-responsive table-full-width">
+                                <th style="font-weight: bold;"><div class="ms-3 d-flex justify-content-center align-items-center">
+                                    <a href="{% url 'add' %}" class="btn btn-success">Add New Product</a>
+                                </div></th>
                                 <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th style="font-weight: bold;">ID</th>
-                    <th style="font-weight: bold;">Name</th>
-                    <th style="font-weight: bold;">Price</th>
-                    <th style="font-weight: bold;">Quantity</th>
-                    <th style="font-weight: bold;">Image 1</th>
-                    <th style="font-weight: bold;">Image 2</th>
-                    <th style="font-weight: bold;">Image 3</th>
-                    <th style="font-weight: bold;">Category</th>
-                    <th style="font-weight: bold;">Actions</th>
-                    <th style="font-weight: bold;"><div class="ms-3 d-flex justify-content-center align-items-center">
-                        <a href="{% url 'add' %}" class="btn btn-success">Add New Product</a>
-                    </div></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for product in products %}
-                <tr>
-                    <td>{{ product.product_id }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.price }}</td>
-                    <td>{{ product.quantity }}</td>
-                    <td><img src="{{ product.image1.url }}" alt="Image 1" style="width: 50px; height: 50px;"></td>
-                    <td><img src="{{ product.image2.url }}" alt="Image 2" style="width: 50px; height: 50px;"></td>
-                    <td><img src="{{ product.image3.url }}" alt="Image 3" style="width: 50px; height: 50px;"></td>
-                    <td>{{ product.catogery.name }}</td>
-                    <td>
-                        <a href="/edit/{{ product.product_id }}" class="btn btn-warning">Edit</a>
-                        <a href="/delete/{{ product.product_id }}" class="btn btn-primary">Delete</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Description</th>
+                                                <th>Category</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for product in page_obj %}
+                                            <tr>
+                                                <td>{{ product.product_id }}</td>
+                                                <td>{{ product.name }}</td>
+                                                <td style="word-wrap: break-word; max-width: 150px;">{{ product.description }}</td>
+                                                <td>{{ product.catogery }}</td>
+                                                
+                                                <td>
+                                                    <a href="{% url 'edit' product.product_id %}" class="btn btn-warning">Edit</a>
+                                                    <a href="{% url 'delete' product.product_id %}" class="btn btn-primary">Delete</a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    
+                                    <!-- Pagination links -->
+                                    
+                                    
+           
+            
+        
+       
+
     
         <footer class="footer">
-            <div class="container-fluid">
+            <div class="container-fluid justify-content:center;">
                 <nav class="pull-left">
-                    <ul>
-                        <li>
-                            <a href="http://www.creative-tim.com">
-                                Creative Tim
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://blog.creative-tim.com">
-                                Blog
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://www.creative-tim.com/license">
-                                Licenses
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="copyright pull-right">
-                    &copy; <script>document.write(new Date().getFullYear())</script>, made with <i class="fa fa-heart heart"></i> by <a href="http://www.creative-tim.com">Creative Tim</a>
-                </div>
+                   <!-- Pagination links -->
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="current-page">{{ num }}</span>
+        {% else %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+</div>
+
+                
             </div>
         </footer>
     </div>
@@ -289,7 +311,8 @@
  <!-- Paper Dashboard DEMO methods, don't include it in your project! -->
  <script src="../static/assets/vendor/assets/js/demo.js"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
-
+ 
+    
 </html>
 
 
