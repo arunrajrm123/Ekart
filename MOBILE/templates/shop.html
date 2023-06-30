@@ -275,7 +275,10 @@
 
 					<!-- Icon header -->
 					<div class="wrap-icon-header flex-w flex-r-m">
-						
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+							<i class="zmdi zmdi-search"></i>
+						</div>
+
 
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-cart" >
 							<i class="zmdi zmdi-shopping-cart"></i>
@@ -375,7 +378,7 @@
 						<select name="price_range" id="price_range">
 						  <option value="">All</option>
 						  <option value="100-1500" {% if selected_price_range == '100-1500' %}selected{% endif %}>100-1500</option>
-						  <option value="1501-5000" {% if selected_price_range == '1501-5000' %}selected{% endif %}>1501-5000</option>
+						  <option value="1000-5000" {% if selected_price_range == '1000-5000' %}selected{% endif %}>1000-5000</option>
 						  <!-- Add more price range options as needed -->
 						</select>
 						<button type="submit" style="background-color: #4CAF50; color: white; padding: 5px 10px; border: none; cursor: pointer; border-radius: 4px;">Filter</button>

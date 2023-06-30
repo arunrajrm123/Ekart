@@ -236,7 +236,7 @@
         {%if varient.image%}
         <div class="border rounded-4 mb-3 d-flex justify-content-center " style="max-width: 50%; max-height: 50vh; margin: auto">
           <a  href="{{ varient.image.url }}" class="MagicZoom">
-            <img style="max-width: 80%; max-height: 80vh; margin: auto"  src="{{varient.image.url}}" />
+            <img style="max-width: 80%; max-height: 80vh; margin: auto" id="zoom" src="{{varient.image.url}}" />
           </a>
 
         </div>
@@ -244,18 +244,18 @@
         
         <div class="d-flex justify-content-center mb-3 py-3">
           {%if varient.image%}
-          <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="#" class="item-thumb">
-            <img width="60" height="60" class="rounded-2" src="{{ varient.image.url}}" />
+          <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image"  class="item-thumb">
+            <img width="60" height="60" class="smalImg" class="rounded-2" src="{{ varient.image.url}}" />
           </a>
           {%endif%}
           {%if varient.image1%}
-          <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="#" class="item-thumb">
-            <img width="60" height="60" class="rounded-2" src="{{ varient.image1.url}}" />
+          <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" class="item-thumb">
+            <img width="60" height="60" class="smalImg" class="rounded-2" src="{{ varient.image1.url}}" />
           </a>
           {%endif%}
           {%if varient.image2%}
-          <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="#">
-            <img width="60" height="60" class="rounded-2" src="{{ varient.image2.url}}" />
+          <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" >
+            <img width="60" height="60"class="smalImg" class="rounded-2" src="{{ varient.image2.url}}" />
           </a>
           {%endif%}
 
@@ -323,12 +323,9 @@
                 <button type="submit" name="action"  value="add_to_cart" class="btn btn-success" onclick="showPopup()">Add to Cart</button>
               </form>
             
-              <form method="POST" action="/check/" style="display: inline;">
-                {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ variant.id }}">
-                <input type="hidden" name="quantity" value="{{variant.quantity }}">
-                <button type="submit" name="action" class="btn btn-success" onclick="showPopup()">Buy Now</button>
-              </form>
+              <a href="{% url 'add_to_cart' %}">
+                <button type="submit" name="action" class="btn btn-success" onclick="showPopup()">Go to cart</button>
+              </a>
             </div>
             <form method="post" action="/variantselection/">
               {% csrf_token %}
@@ -530,5 +527,18 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
           });
       
   </script>
-  
+<script>
+  let MainImg = document.getElementById('zoom');
+let smalImg = document.getElementsByClassName('smalImg');
+
+smalImg[0].onclick = () => {
+    MainImg.src = smalImg[0].src;
+}
+smalImg[1].onclick = () => {
+    MainImg.src = smalImg[1].src;
+}
+smalImg[2].onclick = () => {
+    MainImg.src = smalImg[2].src;
+}
+</script>
   </script>{% endblock script %}

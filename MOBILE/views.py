@@ -1115,9 +1115,9 @@ def product_detail(request, product_id):
                     print('im session')
                 else:
                     print('im not the session')
-                    cart_item = Guest(guest_variant_id=varient, guest_quantity=0)
-                    cart_item.save()
-                    
+                    # cart_item = Guest(guest_variant_id=varient, guest_quantity=0)
+                    # cart_item.save()
+                    cart=Guest.objects.create(guest_variant_id=varient,guest_quantity=0)
                     # cart_item_data = {
                     #             'variant_id': cart_item.variant_id.id,
                     #             'quantity': cart_item.quantity,
@@ -1419,10 +1419,12 @@ def check(request):
                                         applied=Couponapplied.objects.create(c_code=coupon,c_user=user)
                                         del request.session["coupon"]
                                     client = razorpay.Client(auth=("rzp_test_LKE4UtUkNNR122", "Ma0iVAjSvXm7CJgE5YdgGenB"))
-                                    amount = 500000*100  # Replace with the actual order amount
+                                    amount = int(t_total*100) # Replace with the actual order amount
                                     payment = client.order.create({'amount': amount, 'currency': 'INR', 'payment_capture': '1'})
+                                   
+                                    print(payment)
                                     cart_items.delete()
-                                    return render(request,'rayzor_main.html')    
+                                    return render(request,'rayzor_main.html',{"amount":amount})    
                             # Replace the following return statement with the appropriate redirect or response
     return render(request, 'home-03.html', {'cart_items': cart_items,
                 'first_coupon':first_coupon,
@@ -1563,7 +1565,9 @@ def cart(request):
             else:
                 total+=i.guest_variant_id.catogery_offer_price * i.guest_quantity
         for cart_item in guest_cart_items:
-            cart_item.guest_quantity 
+            if cart_item.guest_quantity==0:
+                cart_item.guest_quantity=1
+                cart_item.save()
             if cart_item.guest_variant_id.catogery_offer_price==0:
               cart_item.sub_total = cart_item.guest_variant_id.price * cart_item.guest_quantity
               cart_item.save()
@@ -1600,7 +1604,7 @@ def ajaxCoupon(request):
     getcoup = Coupon.objects.filter(code=coupon)
     c_amount = 0
     total = 0
-    msg="Coupon not applied"
+    msg="Coupon Applied"
     print("getcoup", getcoup)
     subtotal = sum(item.sub_total() for item in cart_items)
     cuponuser=Couponapplied.objects.all()
@@ -1629,6 +1633,9 @@ def ajaxCoupon(request):
                     print(am)
                     if subtotal > am:
                         total = subtotal - i.coupon_dis_amount
+                    else:
+                        total=subtotal
+                        msg=f"coupon is not applicable,minimum purchase amount is {am}"
     
     print("haiii",msg)
     return JsonResponse({"total" : total, "msg" : msg})    
@@ -1988,6 +1995,7 @@ def orders(request):
                     order.save()
                 return redirect('orders')  
         orders = Order.objects.filter(user_id=user)
+
         return render(request, 'order.html', {'user': user, 'orders': orders,'cart_items':cart_items})
     else:
         return redirect('loginn')
@@ -2137,9 +2145,10 @@ def delivered_products(request):
             order.save()
             print(order.is_returned)
             
-            return redirect('deli')
+        return redirect('deli')
+    else:
             # return render(request, 'deliverd_pro.html', {'order': order, 'mes': mes})
-    return render(request, 'deliverd_pro.html', {'delivered_product': delivered_product,'mes':mes})
+     return redirect("loginn")
 from django.contrib import messages
 
 
@@ -2167,7 +2176,8 @@ def returned_products(request):
        for i in retn:
         print(i.id)
        return render(request, 'returned_pro.html', {'retn':retn})
-
+    else:
+        return redirect("loginn")
 
 
 
