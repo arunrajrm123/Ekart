@@ -52,24 +52,42 @@
             <li>
               <a style="text-decoration: none;" href="{% url 'shop'%}">Shop</a>
             </li>
-
+                         {%if user%}
             <li class="label1" data-label1="hot">
               <a style="text-decoration: none;" href="{% url 'orders'%}">orders</a>
             </li>
-
+                          {%endif%}
+            {%if not user%}
+            <li>
+              <a href="">Features</a>
+            </li>
+                          {%endif%}
+            {%if user%}
             <li>
               <a style="text-decoration: none;" href="{% url 'deli'%}">delivered_products</a>
             </li>
 
-            
+            {%endif%}
+            {%if not user%}
+            <li>
+              <a href="">Blog</a>
+            </li>
+                          {%endif%}
+            {%if user%}
             <li>
               <a style="text-decoration: none;" href="{% url 'wish'%}">Wishlist</a>
             </li>
-            
-
+            {%endif%}
+            {%if not user%}
+            <li>
+              <a href="">Signup/login</a>
+            </li>
+                          {%endif%}
+            {%if user%}
             <li>
               <a style="text-decoration: none;" href="{% url 'ret'%}">returned_products</a>
             </li>
+            {%endif%}
             
           </ul>
         </div>	

@@ -37,6 +37,7 @@ sms = vonage.Sms(client)
 # Create your views here.
 @never_cache
 def registerform(request):
+    user=None
     if "password" in request.session:
         return redirect("admin_home.html")
     if 'name' in request.session:
@@ -64,8 +65,7 @@ def registerform(request):
             error["name"]='same name exist please enter another'
         if len(name) < 4:
              error["name"] = 'Name must be longer than 4 characters'
-        if not name.isalpha():
-             error["name"] = 'Name should contain only alphabets'
+        
         if not re.match(r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$', email):
             error['email'] = 'Enter a valid email address'
         if email in l:
@@ -98,10 +98,10 @@ def registerform(request):
                 print(e)
             return redirect(otp_grn,otp)   
         else:
-         return render(request,'signup.html',{'error':error}) 
+         return render(request,'signup.html',{'error':error,"user":user}) 
     else:
         print("haiii00")
-        return render(request, 'signup.html')
+        return render(request, 'signup.html',{"user":user})
     
 
 def send_sms(otp, phone_number):
@@ -136,7 +136,7 @@ def otp_grn(request, otp):
                 form.save()
                 del request.session['user']
                 # OTP is valid, redirect to the home page
-                return redirect('home')
+                return redirect('loginn')
         else:
             # OTP is invalid, render the OTP verification page again with an error message
             msg = 'Enter valid OTP'
@@ -176,8 +176,7 @@ def guest_registerform(request):
             error["name"]='same name exist please enter another'
         if len(name) < 4:
              error["name"] = 'Name must be longer than 4 characters'
-        if not name.isalpha():
-             error["name"] = 'Name should contain only alphabets'
+    
         if not re.match(r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$', email):
             error['email'] = 'Enter a valid email address'
         if email in l:
@@ -248,7 +247,7 @@ def guest_otp_grn(request, otp):
                 form.save()
                 
                 # OTP is valid, redirect to the home page
-                return redirect('home')
+                return redirect('loginn')
         else:
             # OTP is invalid, render the OTP verification page again with an error message
             msg = 'Enter valid OTP'
@@ -880,11 +879,11 @@ def delete_product(request, product_id):
 
 
 def shop(request):
-    
+    user=None
     if "password" in request.session:
         return redirect('admin_home')
     else:
-            
+            user = request.session.get('name')
             search = request.GET.get('search')
             categry_filter = request.GET.get('name')
             
@@ -960,7 +959,7 @@ def shop(request):
                 user_name = request.session['name']
                 user = get_object_or_404(Uuser, name=user_name)
                 return render(request, 'shop.html', {'l': l,"product":product,'of':of,"user":user})
-            return render(request, 'shop.html', {'l': l,"product":product,'of':of})
+            return render(request, 'shop.html', {'l': l,"product":product,'of':of,"user":user})
     
    
 @never_cache
@@ -1043,6 +1042,7 @@ import json
 @never_cache
 
 def product_detail(request, product_id):
+    user=None
     if "password" in request.session:
         return redirect('admin_home')
     varient=Varient.objects.get(id=product_id)
@@ -1100,7 +1100,7 @@ def product_detail(request, product_id):
                     # }
 
                     # Render the cart template with the cart items and message
-                    return render(request, 'product.html', {"all_variants":all_variants,'varient':varient,'products': products,'product': product, 'qu': qu, 'message': message})
+                    return render(request, 'product.html', {"user":user,"all_variants":all_variants,'varient':varient,'products': products,'product': product, 'qu': qu, 'message': message})
     else:
                 if request.method == 'POST':
         # Retrieve the product ID from the POST data
@@ -1134,7 +1134,7 @@ def product_detail(request, product_id):
     # else:         print
     #     message = 'This product is out of stock.'
     
-    return render(request, 'product.html', {"all_variants":all_variants,'varient':varient,'products': products,'product': product, 'qu': qu, 'message': message})
+    return render(request, 'product.html', {"user":user,"all_variants":all_variants,'varient':varient,'products': products,'product': product, 'qu': qu, 'message': message})
 
 
 
@@ -1419,7 +1419,7 @@ def check(request):
                                         applied=Couponapplied.objects.create(c_code=coupon,c_user=user)
                                         del request.session["coupon"]
                                     client = razorpay.Client(auth=("rzp_test_LKE4UtUkNNR122", "Ma0iVAjSvXm7CJgE5YdgGenB"))
-                                    amount = int(t_total*100) # Replace with the actual order amount
+                                    amount = int(subtotal*100) # Replace with the actual order amount
                                     payment = client.order.create({'amount': amount, 'currency': 'INR', 'payment_capture': '1'})
                                    
                                     print(payment)
@@ -1493,6 +1493,7 @@ def edit_address(request,id):
 
 @never_cache
 def cart(request):
+    user=None
     if "password" in request.session:
             return redirect('admin_home')
     a = 120
@@ -1549,12 +1550,12 @@ def cart(request):
                         print(total)
                         print(cart_item.quantity, cart_item.sub_total, overall_total)
             if quantity_exceeded:
-                return render(request, 'cart.html',{'cart_items': cart_items,"user":user, 'error_messages': error_messages})
+                return render(request, 'cart.html',{"user":user,'cart_items': cart_items,"user":user, 'error_messages': error_messages})
             else:
                 # return redirect(checkout)
-                return render(request, 'cart.html',{'cart_items': cart_items,"user":user, 'total':total})
+                return render(request, 'cart.html',{"user":user,'cart_items': cart_items,"user":user, 'total':total})
         # Replace 'checkout_page' with the appropriate URL name for your checkout page
-        return render(request, 'cart.html', {'cart_items': cart_items,"user":user,"total":total})
+        return render(request, 'cart.html', {"user":user,'cart_items': cart_items,"user":user,"total":total})
     else:
         guest_cart_items=Guest.objects.all()  
         total=0
@@ -1575,7 +1576,7 @@ def cart(request):
               cart_item.sub_total = cart_item.guest_variant_id.catogery_offer_price * cart_item.guest_quantity
               cart_item.save()
             # total = sum(item.guest_variant_id.price * item.guest_quantity for item in guest_cart_items)
-        return render(request, 'cart.html', {'guest_cart_items': guest_cart_items,"total":total})
+        return render(request, 'cart.html', {"user":user,'guest_cart_items': guest_cart_items,"total":total})
     #    print("haiiicart")
     #    d=[]
     #    cart=request.session.get("cart_item_data")
@@ -2145,7 +2146,7 @@ def delivered_products(request):
             order.save()
             print(order.is_returned)
             
-        return redirect('deli')
+        return render(request, 'deliverd_pro.html', {"delivered_product":delivered_product,'user': user})
     else:
             # return render(request, 'deliverd_pro.html', {'order': order, 'mes': mes})
      return redirect("loginn")
