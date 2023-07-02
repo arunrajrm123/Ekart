@@ -339,6 +339,7 @@
   </div>
 {% else %}
     {% if retn %}
+	<div class="table-container" style="padding-top: 20px; width: 100%; display: flex; justify-content: center;">
     <table style="width: 100%;">
       <thead>
         <tr>
@@ -373,13 +374,14 @@
           <td>{{ order.total_amount }}</td>
           <td>{{ order.address.address_line }}, {{ order.address.state }}</td>
         </tr>
-        {% endfor %}
+       
       </tbody>
     </table>
-    
+	{% endfor %}
     {% endif %}
 	{%endif%}
   </div>
+</div>
 	<!-- Footer -->
     <br>
     <br>

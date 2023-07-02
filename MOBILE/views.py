@@ -1043,6 +1043,13 @@ import json
 
 def product_detail(request, product_id):
     user=None
+    if 'name' in request.session:
+                    # Retrieve the user's name from the session
+                    user_name = request.session['name']
+
+                    # Retrieve the user based on the name
+                    user = get_object_or_404(Uuser, name=user_name)
+    
     if "password" in request.session:
         return redirect('admin_home')
     varient=Varient.objects.get(id=product_id)
@@ -1386,15 +1393,10 @@ def check(request):
                                 if "coupon" in request.session:
                                   coupon=request.session.get("coupon")
                                   applied=Couponapplied.objects.create(c_code=coupon,c_user=user)
-                               
                                   del request.session["coupon"]
-                               
                                 cart_items.delete()
                             # Replace the following return statement with the appropriate redirect or response
                                 return render(request, 'success.html')
-            
-        
-                
                         if payment_method == 'razorpay':
                             if cart_items:
                                 if address_select:
@@ -1410,10 +1412,10 @@ def check(request):
                                             t_total=item.variant_id.catogery_offer_price * quantity
                                             print(total)
                                         print(total)
-                                    order = Order(user_id=user, address=selected_address,total_amount=t_total,total_quantity=quantity,varient_Key=product_id,payment_method=payment_method)
-                                    order.save()
-                                    product_id.quantity -= quantity
-                                    product_id.save()
+                                        order = Order(user_id=user, address=selected_address,total_amount=t_total,total_quantity=quantity,varient_Key=product_id,payment_method=payment_method)
+                                        order.save()
+                                        product_id.quantity -= quantity
+                                        product_id.save()
                                     if "coupon" in request.session:
                                         coupon=request.session.get("coupon")
                                         applied=Couponapplied.objects.create(c_code=coupon,c_user=user)
@@ -1604,10 +1606,11 @@ def ajaxCoupon(request):
     first_coupon = Coupon.objects.all()
     getcoup = Coupon.objects.filter(code=coupon)
     c_amount = 0
-    total = 0
+   
     msg="Coupon Applied"
     print("getcoup", getcoup)
     subtotal = sum(item.sub_total() for item in cart_items)
+    total =subtotal
     cuponuser=Couponapplied.objects.all()
     print(cuponuser)
     if cuponuser:
@@ -1626,7 +1629,10 @@ def ajaxCoupon(request):
                         am = i.coupon_minmun_amount
                         print(am)
                         if subtotal > am:
-                            total = subtotal - i.coupon_dis_amount  
+                            total = subtotal - i.coupon_dis_amount
+                        else:
+                            total=subtotal
+                            msg=f"coupon is not applicable,minimum purchase amount is {am}"
     else:
         print("user  not present")
         for i in getcoup:

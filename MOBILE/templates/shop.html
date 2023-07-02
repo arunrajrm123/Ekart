@@ -412,8 +412,10 @@
 						{% if item.image%}
 						<div class="block2-pic hov-img0">
 							
+							<a href="{% url 'productdetail' product_id=item.id %}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" style="font-size: 20px;">
+								<img src="{{ item.image.url }}" alt="{{ item.product_key.name }} image" class="image-zoom-container" style="height: 200px; width: 200px;">
+							</a>
 							
-							<img src="{{ item.image.url }}" alt="{{ item.product_key.name }} image" class="image-zoom-container" style="height: 200px; width: 200px;">
 
 							
 
